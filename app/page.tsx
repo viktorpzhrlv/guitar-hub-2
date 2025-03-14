@@ -1,0 +1,185 @@
+import { Suspense } from "react"
+import Link from "next/link"
+import Image from "next/image"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
+import { getFeaturedProducts } from "@/lib/firebase/products"
+import { getCategories } from "@/lib/firebase/categories"
+import ProductCard from "@/components/ui/product-card"
+import CategoryCard from "@/components/ui/category-card"
+
+export default function Home() {
+  return (
+    <div className="flex flex-col gap-12 pb-8">
+      {/* Hero Section */}
+      <section className="relative h-[500px] w-full overflow-hidden">
+        <div className="absolute inset-0 bg-black/60 z-10" />
+        <Image src="/images/hero-guitar.jpg" alt="Electric guitar" fill priority className="object-cover" />
+        <div className="container relative z-20 flex h-full flex-col items-center justify-center text-center text-white">
+          <h1 className="mb-4 text-4xl font-bold md:text-5xl lg:text-6xl">Find Your Perfect Sound</h1>
+          <p className="mb-6 max-w-2xl text-lg">
+            Discover premium guitars, amplifiers, effects pedals, and accessories for musicians of all levels.
+          </p>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Button asChild size="lg">
+              <Link href="/category/electric">Shop Electric</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="bg-transparent text-white hover:text-black">
+              <Link href="/category/acoustic">Shop Acoustic</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Categories Section */}
+      <section className="container">
+        <h2 className="mb-6 text-3xl font-bold">Shop by Category</h2>
+        <Suspense fallback={<CategorySkeleton />}>
+          <CategoriesGrid />
+        </Suspense>
+      </section>
+
+      {/* Featured Products Section */}
+      <section className="container">
+        <h2 className="mb-6 text-3xl font-bold">Featured Products</h2>
+        <Suspense fallback={<ProductSkeleton />}>
+          <FeaturedProducts />
+        </Suspense>
+      </section>
+
+      {/* Why Choose Us Section */}
+      <section className="bg-muted py-12">
+        <div className="container">
+          <h2 className="mb-8 text-center text-3xl font-bold">Why Choose Guitar Hub</h2>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <Card>
+              <CardContent className="flex flex-col items-center p-6 text-center">
+                <div className="mb-4 rounded-full bg-primary/10 p-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-6 w-6 text-primary"
+                  >
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                  </svg>
+                </div>
+                <h3 className="mb-2 text-xl font-semibold">Expert Selection</h3>
+                <p className="text-muted-foreground">
+                  Curated by musicians for musicians, ensuring quality and performance.
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="flex flex-col items-center p-6 text-center">
+                <div className="mb-4 rounded-full bg-primary/10 p-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-6 w-6 text-primary"
+                  >
+                    <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
+                    <path d="m9 12 2 2 4-4" />
+                  </svg>
+                </div>
+                <h3 className="mb-2 text-xl font-semibold">Quality Guarantee</h3>
+                <p className="text-muted-foreground">Every instrument is inspected and tested before shipping.</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="flex flex-col items-center p-6 text-center">
+                <div className="mb-4 rounded-full bg-primary/10 p-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-6 w-6 text-primary"
+                  >
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                  </svg>
+                </div>
+                <h3 className="mb-2 text-xl font-semibold">Secure Shopping</h3>
+                <p className="text-muted-foreground">
+                  Shop with confidence with our secure checkout and customer protection.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+async function CategoriesGrid() {
+  const categories = await getCategories()
+
+  return (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      {categories.map((category) => (
+        <CategoryCard key={category.id} category={category} />
+      ))}
+    </div>
+  )
+}
+
+function CategorySkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="flex flex-col gap-2">
+          <Skeleton className="aspect-square w-full rounded-lg" />
+          <Skeleton className="h-6 w-24" />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+async function FeaturedProducts() {
+  const products = await getFeaturedProducts()
+
+  return (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      {products.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  )
+}
+
+function ProductSkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div key={i} className="flex flex-col gap-2">
+          <Skeleton className="aspect-square w-full rounded-lg" />
+          <Skeleton className="h-6 w-full" />
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-6 w-20" />
+        </div>
+      ))}
+    </div>
+  )
+}
+

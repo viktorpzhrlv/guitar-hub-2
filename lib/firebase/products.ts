@@ -1,0 +1,139 @@
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  limit,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp,
+} from "firebase/firestore"
+import { db } from "./config"
+import type { Product } from "@/lib/types"
+
+const productsCollection = collection(db, "products")
+
+export async function getProducts(): Promise<Product[]> {
+  const q = query(
+    productsCollection,
+    where("status", "==", "available"),
+    where("approvalStatus", "==", "approved"),
+    orderBy("createdAt", "desc"),
+  )
+
+  const snapshot = await getDocs(q)
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Product[]
+}
+
+export async function getFeaturedProducts(count = 8): Promise<Product[]> {
+  const q = query(
+    productsCollection,
+    where("status", "==", "available"),
+    where("approvalStatus", "==", "approved"),
+    orderBy("createdAt", "desc"),
+    limit(count),
+  )
+
+  const snapshot = await getDocs(q)
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Product[]
+}
+
+export async function getProductsByCategory(category: string): Promise<Product[]> {
+  const q = query(
+    productsCollection,
+    where("category", "==", category),
+    where("status", "==", "available"),
+    where("approvalStatus", "==", "approved"),
+    orderBy("createdAt", "desc"),
+  )
+
+  const snapshot = await getDocs(q)
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Product[]
+}
+
+export async function getProductById(id: string): Promise<Product | null> {
+  const docRef = doc(db, "products", id)
+  const docSnap = await getDoc(docRef)
+
+  if (docSnap.exists()) {
+    return {
+      id: docSnap.id,
+      ...docSnap.data(),
+    } as Product
+  }
+
+  return null
+}
+
+export async function getProductsBySeller(sellerId: string): Promise<Product[]> {
+  const q = query(productsCollection, where("sellerId", "==", sellerId), orderBy("createdAt", "desc"))
+
+  const snapshot = await getDocs(q)
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Product[]
+}
+
+export async function getPendingProducts(): Promise<Product[]> {
+  const q = query(productsCollection, where("approvalStatus", "==", "pending"), orderBy("createdAt", "desc"))
+
+  const snapshot = await getDocs(q)
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Product[]
+}
+
+export async function createProduct(productData: Omit<Product, "id" | "createdAt" | "updatedAt">) {
+  return addDoc(productsCollection, {
+    ...productData,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  })
+}
+
+export async function updateProduct(id: string, productData: Partial<Omit<Product, "id" | "createdAt" | "updatedAt">>) {
+  const docRef = doc(db, "products", id)
+  return updateDoc(docRef, {
+    ...productData,
+    updatedAt: serverTimestamp(),
+  })
+}
+
+export async function approveProduct(id: string, adminNotes?: string) {
+  const docRef = doc(db, "products", id)
+  return updateDoc(docRef, {
+    approvalStatus: "approved",
+    adminNotes: adminNotes || "",
+    updatedAt: serverTimestamp(),
+  })
+}
+
+export async function rejectProduct(id: string, adminNotes?: string) {
+  const docRef = doc(db, "products", id)
+  return updateDoc(docRef, {
+    approvalStatus: "rejected",
+    adminNotes: adminNotes || "",
+    updatedAt: serverTimestamp(),
+  })
+}
+
+export async function deleteProduct(id: string) {
+  const docRef = doc(db, "products", id)
+  return deleteDoc(docRef)
+}
+
