@@ -43,8 +43,8 @@ export default function ApprovalsPage() {
     } catch (error) {
       console.error("Error loading pending products:", error)
       toast({
-        title: "Error",
-        description: "Failed to load pending products",
+        title: "Грешка",
+        description: "Неуспешно зареждане на чакащи продукти",
         variant: "destructive",
       })
     } finally {
@@ -60,14 +60,14 @@ export default function ApprovalsPage() {
       await approveProduct(selectedProduct.id, adminNotes)
       setPendingProducts(pendingProducts.filter((p) => p.id !== selectedProduct.id))
       toast({
-        title: "Product approved",
-        description: "The product has been approved and is now live",
+        title: "Продуктът е одобрен",
+        description: "Продуктът е одобрен и вече е активен",
       })
     } catch (error) {
       console.error("Error approving product:", error)
       toast({
-        title: "Error",
-        description: "Failed to approve product",
+        title: "Грешка",
+        description: "Неуспешно одобряване на продукта",
         variant: "destructive",
       })
     } finally {
@@ -83,8 +83,8 @@ export default function ApprovalsPage() {
 
     if (!adminNotes.trim()) {
       toast({
-        title: "Notes required",
-        description: "Please provide feedback for the seller",
+        title: "Необходими са бележки",
+        description: "Моля, предоставете обратна връзка за продавача",
         variant: "destructive",
       })
       return
@@ -95,14 +95,14 @@ export default function ApprovalsPage() {
       await rejectProduct(selectedProduct.id, adminNotes)
       setPendingProducts(pendingProducts.filter((p) => p.id !== selectedProduct.id))
       toast({
-        title: "Product rejected",
-        description: "The product has been rejected",
+        title: "Продуктът е отхвърлен",
+        description: "Продуктът е отхвърлен",
       })
     } catch (error) {
       console.error("Error rejecting product:", error)
       toast({
-        title: "Error",
-        description: "Failed to reject product",
+        title: "Грешка",
+        description: "Неуспешно отхвърляне на продукта",
         variant: "destructive",
       })
     } finally {
@@ -116,17 +116,17 @@ export default function ApprovalsPage() {
   return (
     <AdminLayout>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Product Approvals</h1>
+        <h1 className="text-2xl font-bold">Одобрения на продукти</h1>
         <Button variant="outline" onClick={loadPendingProducts}>
-          Refresh
+          Обнови
         </Button>
       </div>
 
       <div className="mt-6">
         <Card>
           <CardHeader>
-            <CardTitle>Pending Approvals</CardTitle>
-            <CardDescription>Review and approve or reject user product listings</CardDescription>
+            <CardTitle>Чакащи одобрения</CardTitle>
+            <CardDescription>Прегледайте и одобрете или отхвърлете обявите на потребителски продукти</CardDescription>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -134,28 +134,28 @@ export default function ApprovalsPage() {
                 <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
                   <Clock className="h-6 w-6 text-muted-foreground animate-pulse" />
                 </div>
-                <p>Loading pending approvals...</p>
+                <p>Зареждане на чакащи одобрения...</p>
               </div>
             ) : pendingProducts.length === 0 ? (
               <div className="py-8 text-center">
                 <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
                   <CheckCircle className="h-6 w-6 text-muted-foreground" />
                 </div>
-                <h3 className="mb-1 text-lg font-medium">No pending approvals</h3>
-                <p className="text-muted-foreground">All product listings have been reviewed</p>
+                <h3 className="mb-1 text-lg font-medium">Няма чакащи одобрения</h3>
+                <p className="text-muted-foreground">Всички обяви на продукти са прегледани</p>
               </div>
             ) : (
               <div className="rounded-md border">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[80px]">Image</TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Price</TableHead>
-                      <TableHead>Category</TableHead>
-                      <TableHead>Seller</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead className="w-[80px]">Изображение</TableHead>
+                      <TableHead>Име</TableHead>
+                      <TableHead>Цена</TableHead>
+                      <TableHead>Категория</TableHead>
+                      <TableHead>Продавач</TableHead>
+                      <TableHead>Дата</TableHead>
+                      <TableHead className="text-right">Действия</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -186,7 +186,7 @@ export default function ApprovalsPage() {
                             <Button variant="outline" size="sm" asChild>
                               <Link href={`/product/${product.id}?preview=true`} target="_blank">
                                 <Eye className="mr-2 h-3.5 w-3.5" />
-                                View
+                                Виж
                               </Link>
                             </Button>
                             <Button
@@ -199,7 +199,7 @@ export default function ApprovalsPage() {
                               }}
                             >
                               <CheckCircle className="mr-2 h-3.5 w-3.5" />
-                              Approve
+                              Одобри
                             </Button>
                             <Button
                               variant="destructive"
@@ -210,7 +210,7 @@ export default function ApprovalsPage() {
                               }}
                             >
                               <XCircle className="mr-2 h-3.5 w-3.5" />
-                              Reject
+                              Отхвърли
                             </Button>
                           </div>
                         </TableCell>
@@ -228,8 +228,8 @@ export default function ApprovalsPage() {
       <Dialog open={isApproveDialogOpen} onOpenChange={setIsApproveDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Approve Product</DialogTitle>
-            <DialogDescription>This product will be visible to all users after approval.</DialogDescription>
+            <DialogTitle>Одобряване на продукт</DialogTitle>
+            <DialogDescription>Този продукт ще бъде видим за всички потребители след одобрение.</DialogDescription>
           </DialogHeader>
 
           {selectedProduct && (
@@ -252,11 +252,11 @@ export default function ApprovalsPage() {
 
               <div>
                 <label htmlFor="admin-notes" className="block text-sm font-medium mb-2">
-                  Notes for Seller (Optional)
+                  Бележки за продавача (по избор)
                 </label>
                 <Textarea
                   id="admin-notes"
-                  placeholder="Add any notes or feedback for the seller"
+                  placeholder="Добавете бележки или обратна връзка за продавача"
                   value={adminNotes}
                   onChange={(e) => setAdminNotes(e.target.value)}
                 />
@@ -266,10 +266,10 @@ export default function ApprovalsPage() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsApproveDialogOpen(false)}>
-              Cancel
+              Отказ
             </Button>
             <Button onClick={handleApprove} disabled={isProcessing} className="bg-green-600 hover:bg-green-700">
-              {isProcessing ? "Processing..." : "Approve Product"}
+              {isProcessing ? "Обработка..." : "Одобряване на продукт"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -279,9 +279,9 @@ export default function ApprovalsPage() {
       <Dialog open={isRejectDialogOpen} onOpenChange={setIsRejectDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Reject Product</DialogTitle>
+            <DialogTitle>Отхвърляне на продукт</DialogTitle>
             <DialogDescription>
-              Please provide feedback to help the seller understand why their product was rejected.
+              Моля, предоставете обратна връзка, за да помогнете на продавача да разбере защо продуктът му е отхвърлен.
             </DialogDescription>
           </DialogHeader>
 
@@ -305,17 +305,17 @@ export default function ApprovalsPage() {
 
               <div>
                 <label htmlFor="rejection-notes" className="block text-sm font-medium mb-2">
-                  Rejection Reason <span className="text-destructive">*</span>
+                  Причина за отхвърляне <span className="text-destructive">*</span>
                 </label>
                 <Textarea
                   id="rejection-notes"
-                  placeholder="Explain why this product is being rejected"
+                  placeholder="Обяснете защо този продукт е отхвърлен"
                   value={adminNotes}
                   onChange={(e) => setAdminNotes(e.target.value)}
                   required
                 />
                 <p className="mt-1 text-xs text-muted-foreground">
-                  This feedback will be shared with the seller to help them improve their listing.
+                  Тази обратна връзка ще бъде споделена с продавача, за да му помогне да подобри обявата си.
                 </p>
               </div>
             </div>
@@ -323,10 +323,10 @@ export default function ApprovalsPage() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsRejectDialogOpen(false)}>
-              Cancel
+              Отказ
             </Button>
             <Button variant="destructive" onClick={handleReject} disabled={isProcessing || !adminNotes.trim()}>
-              {isProcessing ? "Processing..." : "Reject Product"}
+              {isProcessing ? "Обработка..." : "Отхвърляне на продукт"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -334,4 +334,3 @@ export default function ApprovalsPage() {
     </AdminLayout>
   )
 }
-

@@ -12,8 +12,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useToast } from "@/components/ui/use-toast"
 import { resetPassword } from "@/lib/firebase/auth"
 
+// Zod схема за валидация на формата за забравена парола
 const forgotPasswordSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  email: z.string().email("Моля, въведете валиден имейл адрес"),
 })
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>
@@ -36,14 +37,14 @@ export default function ForgotPasswordPage() {
       await resetPassword(data.email)
       setIsEmailSent(true)
       toast({
-        title: "Reset email sent",
-        description: "Check your email for a link to reset your password",
+        title: "Имейл за нулиране е изпратен",
+        description: "Проверете имейла си за връзка за нулиране на паролата",
       })
     } catch (error: any) {
-      console.error("Password reset error:", error)
+      console.error("Грешка при нулиране на паролата:", error)
       toast({
-        title: "Error",
-        description: error.message || "Failed to send reset email",
+        title: "Грешка",
+        description: error.message || "Неуспешно изпращане на имейл за нулиране",
         variant: "destructive",
       })
     } finally {
@@ -55,8 +56,8 @@ export default function ForgotPasswordPage() {
     <div className="container flex h-screen items-center justify-center">
       <Card className="mx-auto w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Forgot password</CardTitle>
-          <CardDescription>Enter your email address and we'll send you a link to reset your password</CardDescription>
+          <CardTitle className="text-2xl font-bold">Забравена парола</CardTitle>
+          <CardDescription>Въведете вашия имейл адрес и ние ще ви изпратим връзка за нулиране на паролата</CardDescription>
         </CardHeader>
         <CardContent>
           {isEmailSent ? (
@@ -78,10 +79,10 @@ export default function ForgotPasswordPage() {
                   <path d="m7.7 12.7 2.6 2.6c.4.4 1 .4 1.4 0l7-7" />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium">Check your email</h3>
-              <p className="text-muted-foreground">We've sent a password reset link to your email address</p>
+              <h3 className="text-lg font-medium">Проверете имейла си</h3>
+              <p className="text-muted-foreground">Изпратихме връзка за нулиране на паролата на вашия имейл адрес</p>
               <Button asChild className="w-full">
-                <Link href="/auth/login">Back to login</Link>
+                <Link href="/auth/login">Обратно към влизане</Link>
               </Button>
             </div>
           ) : (
@@ -92,7 +93,7 @@ export default function ForgotPasswordPage() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>Имейл</FormLabel>
                       <FormControl>
                         <Input placeholder="name@example.com" {...field} />
                       </FormControl>
@@ -102,7 +103,7 @@ export default function ForgotPasswordPage() {
                 />
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Sending..." : "Send reset link"}
+                  {isLoading ? "Изпращане..." : "Изпрати връзка за нулиране"}
                 </Button>
               </form>
             </Form>
@@ -110,9 +111,9 @@ export default function ForgotPasswordPage() {
         </CardContent>
         <CardFooter className="flex justify-center">
           <p className="text-sm text-muted-foreground">
-            Remember your password?{" "}
+            Спомняте си паролата си?{" "}
             <Link href="/auth/login" className="text-primary hover:underline">
-              Back to login
+              Обратно към влизане
             </Link>
           </p>
         </CardFooter>
@@ -120,4 +121,3 @@ export default function ForgotPasswordPage() {
     </div>
   )
 }
-

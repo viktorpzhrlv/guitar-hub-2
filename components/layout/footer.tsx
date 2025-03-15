@@ -11,72 +11,73 @@ export default function Footer() {
               <Guitar className="h-6 w-6 text-primary" />
               <span className="text-lg font-bold">Guitar Hub</span>
             </Link>
+            {/* Вашата крайна дестинация за китари, усилватели, ефекти и аксесоари. */}
             <p className="mt-4 text-sm text-muted-foreground">
-              Your ultimate destination for guitars, amplifiers, effects pedals, and accessories.
+              Вашата крайна дестинация за китари, усилватели, ефекти и аксесоари.
             </p>
           </div>
           <div>
-            <h3 className="text-lg font-semibold">Shop</h3>
+            <h3 className="text-lg font-semibold">Магазин</h3>
             <ul className="mt-4 space-y-2">
               <li>
                 <Link href="/category/electric" className="text-sm text-muted-foreground hover:text-foreground">
-                  Electric Guitars
+                  Електрически китари
                 </Link>
               </li>
               <li>
                 <Link href="/category/acoustic" className="text-sm text-muted-foreground hover:text-foreground">
-                  Acoustic Guitars
+                  Акустични китари
                 </Link>
               </li>
               <li>
                 <Link href="/category/bass" className="text-sm text-muted-foreground hover:text-foreground">
-                  Bass Guitars
+                  Бас китари
                 </Link>
               </li>
               <li>
                 <Link href="/category/amplifiers" className="text-sm text-muted-foreground hover:text-foreground">
-                  Amplifiers
+                  Усилватели
                 </Link>
               </li>
               <li>
                 <Link href="/category/effects" className="text-sm text-muted-foreground hover:text-foreground">
-                  Effects Pedals
+                  Педали за ефекти
                 </Link>
               </li>
               <li>
                 <Link href="/category/accessories" className="text-sm text-muted-foreground hover:text-foreground">
-                  Accessories
+                  Аксесоари
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold">Company</h3>
+            <h3 className="text-lg font-semibold">Компания</h3>
             <ul className="mt-4 space-y-2">
               <li>
                 <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground">
-                  About Us
+                  За нас
                 </Link>
               </li>
               <li>
                 <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground">
-                  Contact
+                  Контакт
                 </Link>
               </li>
               <li>
                 <Link href="/privacy-policy" className="text-sm text-muted-foreground hover:text-foreground">
-                  Privacy Policy
+                  Политика за поверителност
                 </Link>
               </li>
               <li>
                 <Link href="/terms-of-service" className="text-sm text-muted-foreground hover:text-foreground">
-                  Terms of Service
+                  Условия за ползване
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold">Contact</h3>
+            <h3 className="text-lg font-semibold">Контакт</h3>
             <ul className="mt-4 space-y-2">
               <li className="text-sm text-muted-foreground">123 Guitar Street, Music City</li>
               <li className="text-sm text-muted-foreground">info@guitarhub.com</li>
@@ -123,12 +124,12 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-12 border-t pt-8">
+          {/* Всички права запазени. */}
           <p className="text-center text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} Guitar Hub. All rights reserved.
+            &copy; {new Date().getFullYear()} Guitar Hub. Всички права запазени.
           </p>
         </div>
       </div>
     </footer>
   )
 }
-

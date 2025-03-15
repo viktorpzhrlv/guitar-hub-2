@@ -50,8 +50,8 @@ export default function AdminProductsPage() {
     } catch (error) {
       console.error("Error loading products:", error)
       toast({
-        title: "Error",
-        description: "Failed to load products",
+        title: "Грешка",
+        description: "Неуспешно зареждане на продукти",
         variant: "destructive",
       })
     } finally {
@@ -66,14 +66,14 @@ export default function AdminProductsPage() {
       await deleteProduct(productToDelete)
       setProducts(products.filter((product) => product.id !== productToDelete))
       toast({
-        title: "Product deleted",
-        description: "The product has been deleted successfully",
+        title: "Продуктът е изтрит",
+        description: "Продуктът беше успешно изтрит",
       })
     } catch (error) {
       console.error("Error deleting product:", error)
       toast({
-        title: "Error",
-        description: "Failed to delete product",
+        title: "Грешка",
+        description: "Неуспешно изтриване на продукта",
         variant: "destructive",
       })
     } finally {
@@ -116,11 +116,11 @@ export default function AdminProductsPage() {
   return (
     <AdminLayout>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Products</h1>
+        <h1 className="text-2xl font-bold">Продукти</h1>
         <Button asChild>
           <Link href="/admin/products/new">
             <PlusCircle className="mr-2 h-4 w-4" />
-            Add Product
+            Добави продукт
           </Link>
         </Button>
       </div>
@@ -130,7 +130,7 @@ export default function AdminProductsPage() {
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search products..."
+              placeholder="Търсене на продукти..."
               className="pl-8"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -143,14 +143,14 @@ export default function AdminProductsPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[80px]">Image</TableHead>
+              <TableHead className="w-[80px]">Изображение</TableHead>
               <TableHead>
                 <Button
                   variant="ghost"
                   onClick={() => handleSort("name")}
                   className="flex items-center gap-1 p-0 font-medium"
                 >
-                  Name
+                  Име
                   <ArrowUpDown className="h-4 w-4" />
                 </Button>
               </TableHead>
@@ -160,26 +160,26 @@ export default function AdminProductsPage() {
                   onClick={() => handleSort("price")}
                   className="flex items-center gap-1 p-0 font-medium"
                 >
-                  Price
+                  Цена
                   <ArrowUpDown className="h-4 w-4" />
                 </Button>
               </TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>Категория</TableHead>
+              <TableHead>Статус</TableHead>
+              <TableHead className="text-right">Действия</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8">
-                  Loading products...
+                  Зареждане на продукти...
                 </TableCell>
               </TableRow>
             ) : filteredProducts.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8">
-                  No products found
+                  Няма намерени продукти
                 </TableCell>
               </TableRow>
             ) : (
@@ -206,14 +206,14 @@ export default function AdminProductsPage() {
                           product.status === "available" ? "bg-green-500" : "bg-red-500"
                         }`}
                       />
-                      {product.status === "available" ? "Available" : "Unavailable"}
+                      {product.status === "available" ? "Наличен" : "Неналичен"}
                     </div>
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">
-                          <span className="sr-only">Open menu</span>
+                          <span className="sr-only">Отвори меню</span>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -236,7 +236,7 @@ export default function AdminProductsPage() {
                         <DropdownMenuItem asChild>
                           <Link href={`/admin/products/${product.id}`}>
                             <Pencil className="mr-2 h-4 w-4" />
-                            Edit
+                            Редактиране
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -244,7 +244,7 @@ export default function AdminProductsPage() {
                           className="text-destructive focus:text-destructive"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
+                          Изтриване
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -259,15 +259,15 @@ export default function AdminProductsPage() {
       <AlertDialog open={!!productToDelete} onOpenChange={() => setProductToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>Сигурни ли сте?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the product.
+              Това действие не може да бъде отменено. Това ще изтрие продукта за постоянно.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Отказ</AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteProduct} className="bg-destructive text-destructive-foreground">
-              Delete
+              Изтриване
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -275,4 +275,3 @@ export default function AdminProductsPage() {
     </AdminLayout>
   )
 }
-

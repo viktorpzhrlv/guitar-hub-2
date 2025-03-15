@@ -28,24 +28,27 @@ export default async function ProductPage({ params }: ProductPageProps) {
     <div className="container mx-auto px-4 py-8 md:px-6 lg:px-8">
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         {/* Product Gallery */}
+        {/* Продуктова Галерия */}
         <ProductGallery images={product.images} />
         {/* Product Info */}
+        {/* Информация за Продукта */}
         <div className="flex flex-col">
           <h1 className="text-3xl font-bold">{product.name}</h1>
           <div className="mt-2">
             <p className="text-xl font-bold">${product.price.toFixed(2)}</p>
           </div>
           <div className="mt-4">
-            <p className="text-sm text-muted-foreground">Category: {category?.name || "Unknown"}</p>
+            <p className="text-sm text-muted-foreground">Категория: {category?.name || "Unknown"}</p>
           </div>
           <div className="mt-6 border-t pt-6">
-            <h2 className="text-lg font-semibold">Description</h2>
+            <h2 className="text-lg font-semibold">Описание</h2>
             <p className="mt-2 text-muted-foreground">{product.description}</p>
           </div>
           {/* Specifications */}
+          {/* Спецификации */}
           {product.specifications && Object.keys(product.specifications).length > 0 && (
             <div className="mt-6 border-t pt-6">
-              <h2 className="text-lg font-semibold">Specifications</h2>
+              <h2 className="text-lg font-semibold">Спецификации</h2>
               <dl className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
                 {Object.entries(product.specifications).map(([key, value]) => (
                   <div key={key} className="border-b pb-2">
@@ -57,8 +60,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
           )}
           {/* Add to Cart */}
+          {/* Добави в Количката */}
           <div className="mt-8">
-            <p className="mb-2 text-sm text-muted-foreground">Note: This is a unique item. Only one per customer.</p>
+            <p className="mb-2 text-sm text-muted-foreground">Забележка: Това е уникален продукт. Само един на клиент.</p>
             <AddToCartButton product={product} />
           </div>
         </div>
@@ -66,4 +70,3 @@ export default async function ProductPage({ params }: ProductPageProps) {
     </div>
   )
 }
-

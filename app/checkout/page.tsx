@@ -12,16 +12,17 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useCart } from "@/lib/cart-context"
+import { useAuth } from "@/lib/auth-context"
 import { createOrder } from "@/lib/firebase/orders"
 
 const checkoutSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  address: z.string().min(5, "Address must be at least 5 characters"),
-  city: z.string().min(2, "City must be at least 2 characters"),
-  state: z.string().min(2, "State must be at least 2 characters"),
-  zipCode: z.string().min(5, "ZIP code must be at least 5 characters"),
-  phone: z.string().min(10, "Phone number must be at least 10 characters"),
+  name: z.string().min(2, "Името трябва да съдържа поне 2 символа"),
+  email: z.string().email("Моля, въведете валиден имейл адрес"),
+  address: z.string().min(5, "Адресът трябва да съдържа поне 5 символа"),
+  city: z.string().min(2, "Градът трябва да съдържа поне 2 символа"),
+  state: z.string().min(2, "Щатът трябва да съдържа поне 2 символа"),
+  zipCode: z.string().min(5, "Пощенският код трябва да съдържа поне 5 символа"),
+  phone: z.string().min(10, "Телефонният номер трябва да съдържа поне 10 символа"),
   notes: z.string().optional(),
 })
 
@@ -30,13 +31,14 @@ type CheckoutFormValues = z.infer<typeof checkoutSchema>
 export default function CheckoutPage() {
   const router = useRouter()
   const { items, totalPrice, clearCart } = useCart()
+  const { user } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
-      name: "",
-      email: "",
+      name: user?.displayName || "",
+      email: user?.email || "",
       address: "",
       city: "",
       state: "",
@@ -44,6 +46,14 @@ export default function CheckoutPage() {
       phone: "",
       notes: "",
     },
+  })
+
+  // Актуализиране на формата при зареждане на потребителските данни
+  useState(() => {
+    if (user) {
+      form.setValue("name", user.displayName || "")
+      form.setValue("email", user.email || "")
+    }
   })
 
   if (items.length === 0) {
@@ -55,8 +65,9 @@ export default function CheckoutPage() {
     setIsSubmitting(true)
 
     try {
-      // Create order in Firestore
+      // Създаване на поръчка във Firestore
       const order = {
+        customerId: user?.uid || "guest",
         customerName: data.name,
         customerEmail: data.email,
         customerAddress: `${data.address}, ${data.city}, ${data.state} ${data.zipCode}`,
@@ -69,22 +80,22 @@ export default function CheckoutPage() {
 
       await createOrder(order)
 
-      // Clear cart and redirect to success page
+      // Изчистване на количката и пренасочване към страницата за успешни поръчки
       clearCart()
       router.push("/checkout/success")
     } catch (error) {
-      console.error("Error creating order:", error)
+      console.error("Грешка при създаване на поръчка:", error)
       setIsSubmitting(false)
     }
   }
 
   return (
     <div className="container mx-auto px-4 py-8 md:px-6 lg:px-8">
-      <h1 className="mb-8 text-2xl font-bold">Checkout</h1>
+      <h1 className="mb-8 text-2xl font-bold">Завършване на поръчката</h1>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div>
-          <h2 className="mb-4 text-lg font-semibold">Shipping Information</h2>
+          <h2 className="mb-4 text-lg font-semibold">Информация за доставка</h2>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -93,9 +104,9 @@ export default function CheckoutPage() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Full Name</FormLabel>
+                    <FormLabel>Пълно име</FormLabel>
                     <FormControl>
-                      <Input placeholder="John Doe" {...field} />
+                      <Input placeholder="Иван Иванов" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -107,9 +118,9 @@ export default function CheckoutPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email Address</FormLabel>
+                    <FormLabel>Имейл адрес</FormLabel>
                     <FormControl>
-                      <Input placeholder="john@example.com" {...field} />
+                      <Input placeholder="ivan@example.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -121,7 +132,7 @@ export default function CheckoutPage() {
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
+                    <FormLabel>Телефонен номер</FormLabel>
                     <FormControl>
                       <Input placeholder="(123) 456-7890" {...field} />
                     </FormControl>
@@ -135,9 +146,9 @@ export default function CheckoutPage() {
                 name="address"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Street Address</FormLabel>
+                    <FormLabel>Улица, номер</FormLabel>
                     <FormControl>
-                      <Input placeholder="123 Main St" {...field} />
+                      <Input placeholder="ул. Главна 123" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -150,9 +161,9 @@ export default function CheckoutPage() {
                   name="city"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>City</FormLabel>
+                      <FormLabel>Град</FormLabel>
                       <FormControl>
-                        <Input placeholder="New York" {...field} />
+                        <Input placeholder="София" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -164,9 +175,9 @@ export default function CheckoutPage() {
                   name="state"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>State</FormLabel>
+                      <FormLabel>Щат / Област</FormLabel>
                       <FormControl>
-                        <Input placeholder="NY" {...field} />
+                        <Input placeholder="София-град" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -179,9 +190,9 @@ export default function CheckoutPage() {
                 name="zipCode"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>ZIP Code</FormLabel>
+                    <FormLabel>Пощенски код</FormLabel>
                     <FormControl>
-                      <Input placeholder="10001" {...field} />
+                      <Input placeholder="1000" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -193,9 +204,9 @@ export default function CheckoutPage() {
                 name="notes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Order Notes (Optional)</FormLabel>
+                    <FormLabel>Бележки към поръчката (незадължително)</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Special instructions for delivery" {...field} />
+                      <Textarea placeholder="Специални инструкции за доставка" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -204,10 +215,10 @@ export default function CheckoutPage() {
 
               <div className="flex justify-between pt-4">
                 <Button asChild variant="outline">
-                  <Link href="/cart">Back to Cart</Link>
+                  <Link href="/cart">Обратно към количката</Link>
                 </Button>
                 <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Processing..." : "Place Order"}
+                  {isSubmitting ? "Обработка..." : "Потвърди поръчката"}
                 </Button>
               </div>
             </form>
@@ -215,7 +226,7 @@ export default function CheckoutPage() {
         </div>
 
         <div>
-          <h2 className="mb-4 text-lg font-semibold">Order Summary</h2>
+          <h2 className="mb-4 text-lg font-semibold">Информация за поръчката</h2>
 
           <div className="rounded-lg border">
             <div className="p-4">
@@ -237,7 +248,7 @@ export default function CheckoutPage() {
                           <h3>{item.name}</h3>
                           <p className="ml-4">${item.price.toFixed(2)}</p>
                         </div>
-                        <p className="mt-1 text-sm text-muted-foreground">Unique item</p>
+                        <p className="mt-1 text-sm text-muted-foreground">Уникален артикул</p>
                       </div>
                     </div>
                   </li>
@@ -248,20 +259,20 @@ export default function CheckoutPage() {
             <div className="border-t p-4">
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Subtotal</span>
+                  <span className="text-muted-foreground">Междинна сума</span>
                   <span>${totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Shipping</span>
-                  <span>Free</span>
+                  <span className="text-muted-foreground">Доставка</span>
+                  <span>Безплатна</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Tax</span>
+                  <span className="text-muted-foreground">Такса</span>
                   <span>$0.00</span>
                 </div>
                 <div className="border-t pt-2">
                   <div className="flex justify-between font-medium">
-                    <span>Total</span>
+                    <span>Общо</span>
                     <span>${totalPrice.toFixed(2)}</span>
                   </div>
                 </div>
@@ -270,9 +281,9 @@ export default function CheckoutPage() {
           </div>
 
           <div className="mt-6 rounded-lg border p-4">
-            <h3 className="text-sm font-medium">Payment Method</h3>
+            <h3 className="text-sm font-medium">Метод на плащане</h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              For this demo, no actual payment will be processed. Click "Place Order" to simulate a purchase.
+              За тази демонстрация не се обработват реални плащания. Натиснете "Потвърди поръчката", за да симулирате покупка.
             </p>
           </div>
         </div>
@@ -280,4 +291,3 @@ export default function CheckoutPage() {
     </div>
   )
 }
-

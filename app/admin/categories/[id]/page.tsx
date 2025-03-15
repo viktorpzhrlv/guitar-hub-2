@@ -20,12 +20,12 @@ import AdminLayout from "@/components/layout/admin-layout"
 import type { Category } from "@/lib/types"
 
 const categorySchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
+  name: z.string().min(2, "Името трябва да бъде поне 2 символа"),
+  description: z.string().min(10, "Описанието трябва да бъде поне 10 символа"),
   slug: z
     .string()
-    .min(2, "Slug must be at least 2 characters")
-    .regex(/^[a-z0-9-]+$/, "Slug must contain only lowercase letters, numbers, and hyphens"),
+    .min(2, "Slug трябва да бъде поне 2 символа")
+    .regex(/^[a-z0-9-]+$/, "Slug трябва да съдържа само малки букви, цифри и тирета"),
 })
 
 type CategoryFormValues = z.infer<typeof categorySchema>
@@ -58,8 +58,8 @@ export default function EditCategoryPage({ params }: { params: { id: string } })
 
         if (!data) {
           toast({
-            title: "Error",
-            description: "Category not found",
+            title: "Грешка",
+            description: "Категорията не е намерена",
             variant: "destructive",
           })
           router.push("/admin/categories")
@@ -76,10 +76,10 @@ export default function EditCategoryPage({ params }: { params: { id: string } })
           slug: data.slug,
         })
       } catch (error) {
-        console.error("Error loading category:", error)
+        console.error("Грешка при зареждане на категорията:", error)
         toast({
-          title: "Error",
-          description: "Failed to load category",
+          title: "Грешка",
+          description: "Неуспешно зареждане на категорията",
           variant: "destructive",
         })
       } finally {
@@ -147,16 +147,16 @@ export default function EditCategoryPage({ params }: { params: { id: string } })
       })
 
       toast({
-        title: "Category updated",
-        description: "The category has been updated successfully",
+        title: "Категорията е обновена",
+        description: "Категорията беше обновена успешно",
       })
 
       router.push("/admin/categories")
     } catch (error) {
-      console.error("Error updating category:", error)
+      console.error("Грешка при обновяване на категорията:", error)
       toast({
-        title: "Error",
-        description: "Failed to update category",
+        title: "Грешка",
+        description: "Неуспешно обновяване на категорията",
         variant: "destructive",
       })
     } finally {
@@ -179,11 +179,11 @@ export default function EditCategoryPage({ params }: { params: { id: string } })
       <AdminLayout>
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>Category not found.</AlertDescription>
+          <AlertTitle>Грешка</AlertTitle>
+          <AlertDescription>Категорията не е намерена.</AlertDescription>
         </Alert>
         <div className="mt-4 flex justify-center">
-          <Button onClick={() => router.push("/admin/categories")}>Back to Categories</Button>
+          <Button onClick={() => router.push("/admin/categories")}>Обратно към категориите</Button>
         </div>
       </AdminLayout>
     )
@@ -192,9 +192,9 @@ export default function EditCategoryPage({ params }: { params: { id: string } })
   return (
     <AdminLayout>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Edit Category</h1>
+        <h1 className="text-2xl font-bold">Редактиране на категория</h1>
         <Button variant="outline" onClick={() => router.back()}>
-          Cancel
+          Отказ
         </Button>
       </div>
 
@@ -208,9 +208,9 @@ export default function EditCategoryPage({ params }: { params: { id: string } })
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Category Name</FormLabel>
+                      <FormLabel>Име на категорията</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter category name" {...field} />
+                        <Input placeholder="Въведете име на категорията" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -225,7 +225,7 @@ export default function EditCategoryPage({ params }: { params: { id: string } })
                       <div className="flex items-center justify-between">
                         <FormLabel>Slug</FormLabel>
                         <Button type="button" variant="ghost" size="sm" onClick={generateSlug} className="text-xs">
-                          Generate from name
+                          Генерирай от името
                         </Button>
                       </div>
                       <FormControl>
@@ -241,9 +241,9 @@ export default function EditCategoryPage({ params }: { params: { id: string } })
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description</FormLabel>
+                      <FormLabel>Описание</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Enter category description" className="min-h-32" {...field} />
+                        <Textarea placeholder="Въведете описание на категорията" className="min-h-32" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -252,7 +252,7 @@ export default function EditCategoryPage({ params }: { params: { id: string } })
               </div>
 
               <div>
-                <FormLabel>Category Image</FormLabel>
+                <FormLabel>Изображение на категорията</FormLabel>
                 <div className="mt-2">
                   {imagePreview || existingImage ? (
                     <div className="relative aspect-square overflow-hidden rounded-md border">
@@ -306,13 +306,13 @@ export default function EditCategoryPage({ params }: { params: { id: string } })
                           <circle cx="9" cy="9" r="2" />
                           <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
                         </svg>
-                        <span className="text-sm text-muted-foreground">Upload Image</span>
+                        <span className="text-sm text-muted-foreground">Качи изображение</span>
                         <Input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
                       </label>
                     </div>
                   )}
                   <p className="mt-2 text-xs text-muted-foreground">
-                    Recommended: Square image, at least 500x500 pixels
+                    Препоръчително: Квадратно изображение, поне 500x500 пиксела
                   </p>
                 </div>
               </div>
@@ -320,10 +320,10 @@ export default function EditCategoryPage({ params }: { params: { id: string } })
 
             <div className="flex justify-end gap-4">
               <Button type="button" variant="outline" onClick={() => router.back()}>
-                Cancel
+                Отказ
               </Button>
               <Button type="submit" disabled={isSaving}>
-                {isSaving ? "Saving..." : "Save Changes"}
+                {isSaving ? "Запазване..." : "Запази промените"}
               </Button>
             </div>
           </form>
@@ -332,4 +332,3 @@ export default function EditCategoryPage({ params }: { params: { id: string } })
     </AdminLayout>
   )
 }
-

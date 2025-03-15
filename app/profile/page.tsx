@@ -18,9 +18,10 @@ import { updateProfile } from "firebase/auth"
 import { doc, updateDoc } from "firebase/firestore"
 import { db } from "@/lib/firebase/config"
 
+// Zod схема за валидиране на профила
 const profileSchema = z.object({
-  displayName: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address").optional(),
+  displayName: z.string().min(2, "Името трябва да бъде поне 2 символа"),
+  email: z.string().email("Моля, въведете валиден имейл адрес").optional(),
   phoneNumber: z.string().optional(),
   address: z.string().optional(),
 })
@@ -43,7 +44,7 @@ export default function ProfilePage() {
     },
   })
 
-  // Update form values when user data is loaded
+  // Актуализиране на стойностите на формата, когато данните за потребителя се заредят
   useState(() => {
     if (user) {
       form.reset({
@@ -60,12 +61,12 @@ export default function ProfilePage() {
 
     setIsLoading(true)
     try {
-      // Update display name in Firebase Auth
+      // Актуализиране на показваното име във Firebase Auth
       await updateProfile(user, {
         displayName: data.displayName,
       })
 
-      // Update user document in Firestore
+      // Актуализиране на потребителския документ във Firestore
       const userRef = doc(db, "users", user.uid)
       await updateDoc(userRef, {
         displayName: data.displayName,
@@ -75,14 +76,14 @@ export default function ProfilePage() {
       })
 
       toast({
-        title: "Profile updated",
-        description: "Your profile has been updated successfully",
+        title: "Профилът е обновен",
+        description: "Вашият профил беше успешно обновен",
       })
     } catch (error: any) {
-      console.error("Profile update error:", error)
+      console.error("Грешка при обновяване на профила:", error)
       toast({
-        title: "Update failed",
-        description: error.message || "Failed to update profile",
+        title: "Неуспешно обновяване",
+        description: error.message || "Неуспешно обновяване на профила",
         variant: "destructive",
       })
     } finally {
@@ -94,12 +95,12 @@ export default function ProfilePage() {
     <ProtectedRoute>
       <div className="container py-10">
         <div className="mx-auto max-w-3xl">
-          <h1 className="mb-6 text-3xl font-bold">My Profile</h1>
+          <h1 className="mb-6 text-3xl font-bold">Моят Профил</h1>
 
           <Card>
             <CardHeader>
-              <CardTitle>Personal Information</CardTitle>
-              <CardDescription>Update your personal information</CardDescription>
+              <CardTitle>Лична Информация</CardTitle>
+              <CardDescription>Обновете вашата лична информация</CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...form}>
@@ -109,7 +110,7 @@ export default function ProfilePage() {
                     name="displayName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Full Name</FormLabel>
+                        <FormLabel>Пълно Име</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -123,7 +124,7 @@ export default function ProfilePage() {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>Имейл</FormLabel>
                         <FormControl>
                           <Input {...field} disabled />
                         </FormControl>
@@ -137,7 +138,7 @@ export default function ProfilePage() {
                     name="phoneNumber"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Phone Number</FormLabel>
+                        <FormLabel>Телефонен Номер</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -151,7 +152,7 @@ export default function ProfilePage() {
                     name="address"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Address</FormLabel>
+                        <FormLabel>Адрес</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -161,7 +162,7 @@ export default function ProfilePage() {
                   />
 
                   <Button type="submit" disabled={isLoading}>
-                    {isLoading ? "Saving..." : "Save Changes"}
+                    {isLoading ? "Запазване..." : "Запази Промените"}
                   </Button>
                 </form>
               </Form>
@@ -171,12 +172,12 @@ export default function ProfilePage() {
           <div className="mt-8">
             <Card>
               <CardHeader>
-                <CardTitle>Account Security</CardTitle>
-                <CardDescription>Manage your password and account security</CardDescription>
+                <CardTitle>Сигурност на Акаунта</CardTitle>
+                <CardDescription>Управлявайте вашата парола и сигурността на акаунта</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Button variant="outline" asChild>
-                  <Link href="/auth/forgot-password">Change Password</Link>
+                  <Link href="/auth/forgot-password">Смяна на Паролата</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -186,4 +187,3 @@ export default function ProfilePage() {
     </ProtectedRoute>
   )
 }
-

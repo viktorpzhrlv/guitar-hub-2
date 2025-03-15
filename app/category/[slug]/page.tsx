@@ -17,6 +17,7 @@ interface CategoryPageProps {
   }
 }
 
+// CategoryPage е основният компонент на страницата, който показва продуктите в дадена категория.
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
   const category = await getCategoryBySlug(params.slug)
 
@@ -42,6 +43,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   )
 }
 
+// ProductGrid показва списък с продукти, филтрирани и сортирани според параметрите на търсене.
 async function ProductGrid({
   categoryId,
   searchParams,
@@ -55,10 +57,10 @@ async function ProductGrid({
 }) {
   const products = await getProductsByCategory(categoryId)
 
-  // Apply filters and sorting
+  // Прилагане на филтри и сортиране
   let filteredProducts = [...products]
 
-  // Filter by price
+  // Филтриране по цена
   if (searchParams.minPrice || searchParams.maxPrice) {
     const minPrice = searchParams.minPrice ? Number.parseFloat(searchParams.minPrice) : 0
     const maxPrice = searchParams.maxPrice ? Number.parseFloat(searchParams.maxPrice) : Number.POSITIVE_INFINITY
@@ -66,7 +68,7 @@ async function ProductGrid({
     filteredProducts = filteredProducts.filter((product) => product.price >= minPrice && product.price <= maxPrice)
   }
 
-  // Apply sorting
+  // Прилагане на сортиране
   if (searchParams.sort) {
     switch (searchParams.sort) {
       case "price-asc":
@@ -79,19 +81,19 @@ async function ProductGrid({
         filteredProducts.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds)
         break
       default:
-        // Default sort by newest
+        // Сортиране по подразбиране: най-новите
         filteredProducts.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds)
     }
   } else {
-    // Default sort by newest
+    // Сортиране по подразбиране: най-новите
     filteredProducts.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds)
   }
 
   if (filteredProducts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <h2 className="text-xl font-semibold">No products found</h2>
-        <p className="mt-2 text-muted-foreground">Try adjusting your filters or check back later for new products.</p>
+        <h2 className="text-xl font-semibold">Не са намерени продукти</h2>
+        <p className="mt-2 text-muted-foreground">Опитайте да коригирате филтрите си или проверете по-късно за нови продукти.</p>
       </div>
     )
   }
@@ -105,6 +107,7 @@ async function ProductGrid({
   )
 }
 
+// ProductSkeleton е компонент, който показва скелетна структура, докато продуктите се зареждат.
 function ProductSkeleton() {
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -119,4 +122,3 @@ function ProductSkeleton() {
     </div>
   )
 }
-

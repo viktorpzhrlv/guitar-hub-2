@@ -47,14 +47,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       switch (action) {
         case "signedOut":
           toast({
-            title: "Signed out",
-            description: "You have been signed out successfully",
+            title: "Излязохте",
+            description: "Успешно излязохте от профила си",
           })
           break
         case "error":
           toast({
-            title: "Error",
-            description: message || "An error occurred",
+            title: "Грешка",
+            description: message || "Възникна грешка",
             variant: "destructive",
           })
           break
@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error("Error signing out", error)
       toastActionRef.current = { 
         action: "error", 
-        message: "Failed to sign out" 
+        message: "Неуспешно излизане" 
       }
     }
   }
@@ -93,8 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext)
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider")
+    throw new Error("useAuth трябва да се използва в рамките на AuthProvider")
   }
   return context
 }
-

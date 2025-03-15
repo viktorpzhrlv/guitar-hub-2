@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { PlusCircle, Pencil, Trash2, AlertCircle } from "lucide-react"
+import { PlusCircle, Pencil, Trash2, AlertCircle, ShoppingBag } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -45,10 +45,10 @@ export default function SellerDashboardPage() {
       const data = await getProductsBySeller(user.uid)
       setProducts(data)
     } catch (error) {
-      console.error("Error loading products:", error)
+      console.error("Грешка при зареждане на продукти:", error)
       toast({
-        title: "Error",
-        description: "Failed to load your products",
+        title: "Грешка",
+        description: "Неуспешно зареждане на вашите продукти",
         variant: "destructive",
       })
     } finally {
@@ -63,14 +63,14 @@ export default function SellerDashboardPage() {
       await deleteProduct(productToDelete)
       setProducts(products.filter((product) => product.id !== productToDelete))
       toast({
-        title: "Product deleted",
-        description: "Your product has been deleted successfully",
+        title: "Продуктът е изтрит",
+        description: "Вашият продукт беше успешно изтрит",
       })
     } catch (error) {
-      console.error("Error deleting product:", error)
+      console.error("Грешка при изтриване на продукта:", error)
       toast({
-        title: "Error",
-        description: "Failed to delete product",
+        title: "Грешка",
+        description: "Неуспешно изтриване на продукта",
         variant: "destructive",
       })
     } finally {
@@ -83,19 +83,19 @@ export default function SellerDashboardPage() {
       case "pending":
         return (
           <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
-            Pending Review
+            В очакване на преглед
           </Badge>
         )
       case "approved":
         return (
           <Badge variant="outline" className="bg-green-100 text-green-800">
-            Approved
+            Одобрен
           </Badge>
         )
       case "rejected":
         return (
           <Badge variant="outline" className="bg-red-100 text-red-800">
-            Rejected
+            Отхвърлен
           </Badge>
         )
       default:
@@ -108,34 +108,42 @@ export default function SellerDashboardPage() {
       <div className="container py-10">
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Seller Dashboard</h1>
-            <p className="mt-1 text-muted-foreground">Manage your product listings</p>
+            <h1 className="text-3xl font-bold">Табло за управление на продавача</h1>
+            <p className="mt-1 text-muted-foreground">Управлявайте вашите продуктови обяви</p>
           </div>
-          <Button asChild>
-            <Link href="/seller/products/new">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              List New Item
-            </Link>
-          </Button>
+          <div className="flex gap-2">
+            <Button asChild>
+              <Link href="/seller/products/new">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Обяви нов артикул
+              </Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/seller/orders">
+                <ShoppingBag className="mr-2 h-4 w-4" />
+                Управление на поръчки
+              </Link>
+            </Button>
+          </div>
         </div>
 
         <div className="grid gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>Your Listings</CardTitle>
-              <CardDescription>View and manage all your product listings</CardDescription>
+              <CardTitle>Вашите обяви</CardTitle>
+              <CardDescription>Преглеждайте и управлявайте всички ваши продуктови обяви</CardDescription>
             </CardHeader>
             <CardContent>
               {isLoading ? (
-                <div className="py-8 text-center">Loading your products...</div>
+                <div className="py-8 text-center">Зареждане на вашите продукти...</div>
               ) : products.length === 0 ? (
                 <div className="py-8 text-center">
                   <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
                     <AlertCircle className="h-6 w-6 text-muted-foreground" />
                   </div>
-                  <h3 className="mb-1 text-lg font-medium">No products found</h3>
+                  <h3 className="mb-1 text-lg font-medium">Не са намерени продукти</h3>
                   <p className="text-muted-foreground">
-                    You haven't listed any products yet. Click "List New Item" to get started.
+                    Все още не сте обявили продукти. Кликнете върху "Обяви нов артикул", за да започнете.
                   </p>
                 </div>
               ) : (
@@ -143,12 +151,12 @@ export default function SellerDashboardPage() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="w-[80px]">Image</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Price</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Approval</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+                        <TableHead className="w-[80px]">Изображение</TableHead>
+                        <TableHead>Име</TableHead>
+                        <TableHead>Цена</TableHead>
+                        <TableHead>Статус</TableHead>
+                        <TableHead>Одобрение</TableHead>
+                        <TableHead className="text-right">Действия</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -174,13 +182,13 @@ export default function SellerDashboardPage() {
                                   product.status === "available" ? "bg-green-500" : "bg-red-500"
                                 }`}
                               />
-                              {product.status === "available" ? "Available" : "Unavailable"}
+                              {product.status === "available" ? "Наличен" : "Неналичен"}
                             </div>
                           </TableCell>
                           <TableCell>
                             {getStatusBadge(product.approvalStatus)}
                             {product.adminNotes && (
-                              <div className="mt-1 text-xs text-muted-foreground">Note: {product.adminNotes}</div>
+                              <div className="mt-1 text-xs text-muted-foreground">Бележка: {product.adminNotes}</div>
                             )}
                           </TableCell>
                           <TableCell className="text-right">
@@ -193,12 +201,12 @@ export default function SellerDashboardPage() {
                               >
                                 <Link href={`/seller/products/${product.id}`}>
                                   <Pencil className="mr-2 h-3.5 w-3.5" />
-                                  Edit
+                                  Редактиране
                                 </Link>
                               </Button>
                               <Button variant="destructive" size="sm" onClick={() => setProductToDelete(product.id)}>
                                 <Trash2 className="mr-2 h-3.5 w-3.5" />
-                                Delete
+                                Изтриване
                               </Button>
                             </div>
                           </TableCell>
@@ -213,35 +221,35 @@ export default function SellerDashboardPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Listing Guidelines</CardTitle>
-              <CardDescription>Important information about listing items for sale</CardDescription>
+              <CardTitle>Указания за обяви</CardTitle>
+              <CardDescription>Важна информация относно обявяването на артикули за продажба</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="rounded-md bg-muted p-4">
-                <h3 className="mb-2 font-medium">Approval Process</h3>
+                <h3 className="mb-2 font-medium">Процес на одобрение</h3>
                 <p className="text-sm text-muted-foreground">
-                  All listings require admin approval before they appear on the site. This process typically takes 1-2
-                  business days.
+                  Всички обяви изискват одобрение от администратор, преди да се появят на сайта. Този процес обикновено
+                  отнема 1-2 работни дни.
                 </p>
               </div>
 
               <div>
-                <h3 className="mb-2 font-medium">Listing Requirements</h3>
+                <h3 className="mb-2 font-medium">Изисквания за обяви</h3>
                 <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
-                  <li>Clear, high-quality photos of the item</li>
-                  <li>Accurate and detailed description</li>
-                  <li>Reasonable pricing</li>
-                  <li>Honest representation of the item's condition</li>
-                  <li>Complete specifications</li>
+                  <li>Ясни, висококачествени снимки на артикула</li>
+                  <li>Точно и подробно описание</li>
+                  <li>Разумна цена</li>
+                  <li>Честно представяне на състоянието на артикула</li>
+                  <li>Пълни спецификации</li>
                 </ul>
               </div>
 
               <div>
-                <h3 className="mb-2 font-medium">Prohibited Items</h3>
+                <h3 className="mb-2 font-medium">Забранени артикули</h3>
                 <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
-                  <li>Counterfeit or replica items</li>
-                  <li>Items with inappropriate imagery</li>
-                  <li>Non-musical equipment</li>
+                  <li>Фалшиви или реплика артикули</li>
+                  <li>Артикули с неподходящи изображения</li>
+                  <li>Немузикално оборудване</li>
                 </ul>
               </div>
             </CardContent>
@@ -252,15 +260,15 @@ export default function SellerDashboardPage() {
       <AlertDialog open={!!productToDelete} onOpenChange={() => setProductToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>Сигурни ли сте?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your product listing.
+              Това действие не може да бъде отменено. Това ще изтрие за постоянно вашата продуктова обява.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Отказ</AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteProduct} className="bg-destructive text-destructive-foreground">
-              Delete
+              Изтриване
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -268,4 +276,3 @@ export default function SellerDashboardPage() {
     </ProtectedRoute>
   )
 }
-

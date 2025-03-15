@@ -10,20 +10,20 @@ export default function CheckoutSuccessPage() {
       <div className="rounded-full bg-primary/10 p-3">
         <CheckCircle className="h-12 w-12 text-primary" />
       </div>
-      <h1 className="mt-6 text-3xl font-bold">Order Placed Successfully!</h1>
+      <h1 className="mt-6 text-3xl font-bold">Поръчката е направена успешно!</h1>
+      {/* Благодарим ви за вашата покупка. Получихме вашата поръчка и ще я обработим веднага. Ще получите имейл за потвърждение скоро. */}
       <p className="mt-4 max-w-md text-muted-foreground">
-        Thank you for your purchase. We've received your order and will process it right away. You'll receive a
-        confirmation email shortly.
+        Благодарим ви за вашата покупка. Получихме вашата поръчка и ще я обработим веднага. Ще получите имейл за потвърждение скоро.
       </p>
       <div className="mt-8 flex gap-4">
         <Button asChild>
-          <Link href="/">Continue Shopping</Link>
+          <Link href="/">Продължете с пазаруването</Link>
         </Button>
+        {/* Свържете се с поддръжката */}
         <Button asChild variant="outline">
-          <Link href="/contact">Contact Support</Link>
+          <Link href="/contact">Свържете се с поддръжката</Link>
         </Button>
       </div>
     </div>
   )
 }
-

@@ -17,16 +17,16 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/60 z-10" />
         <Image src="/images/hero-guitar.jpg" alt="Electric guitar" fill priority className="object-cover" />
         <div className="container relative z-20 flex h-full flex-col items-center justify-center text-center text-white">
-          <h1 className="mb-4 text-4xl font-bold md:text-5xl lg:text-6xl">Find Your Perfect Sound</h1>
+          <h1 className="mb-4 text-4xl font-bold md:text-5xl lg:text-6xl">Открийте Перфектния си Звук</h1>
           <p className="mb-6 max-w-2xl text-lg">
-            Discover premium guitars, amplifiers, effects pedals, and accessories for musicians of all levels.
+            Открийте премиум китари, усилватели, ефекти педали и аксесоари за музиканти от всички нива.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Button asChild size="lg">
-              <Link href="/category/electric">Shop Electric</Link>
+              <Link href="/category/electric">Пазарувай Електрически</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="bg-transparent text-white hover:text-black">
-              <Link href="/category/acoustic">Shop Acoustic</Link>
+              <Link href="/category/acoustic">Пазарувай Акустични</Link>
             </Button>
           </div>
         </div>
@@ -34,7 +34,7 @@ export default function Home() {
 
       {/* Categories Section */}
       <section className="container">
-        <h2 className="mb-6 text-3xl font-bold">Shop by Category</h2>
+        <h2 className="mb-6 text-3xl font-bold">Пазарувай по Категория</h2>
         <Suspense fallback={<CategorySkeleton />}>
           <CategoriesGrid />
         </Suspense>
@@ -42,7 +42,7 @@ export default function Home() {
 
       {/* Featured Products Section */}
       <section className="container">
-        <h2 className="mb-6 text-3xl font-bold">Featured Products</h2>
+        <h2 className="mb-6 text-3xl font-bold">Препоръчани Продукти</h2>
         <Suspense fallback={<ProductSkeleton />}>
           <FeaturedProducts />
         </Suspense>
@@ -51,7 +51,7 @@ export default function Home() {
       {/* Why Choose Us Section */}
       <section className="bg-muted py-12">
         <div className="container">
-          <h2 className="mb-8 text-center text-3xl font-bold">Why Choose Guitar Hub</h2>
+          <h2 className="mb-8 text-center text-3xl font-bold">Защо да Изберете Guitar Hub</h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             <Card>
               <CardContent className="flex flex-col items-center p-6 text-center">
@@ -71,9 +71,9 @@ export default function Home() {
                     <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
                   </svg>
                 </div>
-                <h3 className="mb-2 text-xl font-semibold">Expert Selection</h3>
+                <h3 className="mb-2 text-xl font-semibold">Експертна Селекция</h3>
                 <p className="text-muted-foreground">
-                  Curated by musicians for musicians, ensuring quality and performance.
+                  Подбрано от музиканти за музиканти, гарантиращо качество и производителност.
                 </p>
               </CardContent>
             </Card>
@@ -96,8 +96,8 @@ export default function Home() {
                     <path d="m9 12 2 2 4-4" />
                   </svg>
                 </div>
-                <h3 className="mb-2 text-xl font-semibold">Quality Guarantee</h3>
-                <p className="text-muted-foreground">Every instrument is inspected and tested before shipping.</p>
+                <h3 className="mb-2 text-xl font-semibold">Гаранция за Качество</h3>
+                <p className="text-muted-foreground">Всеки инструмент е инспектиран и тестван преди изпращане.</p>
               </CardContent>
             </Card>
             <Card>
@@ -118,9 +118,9 @@ export default function Home() {
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
                   </svg>
                 </div>
-                <h3 className="mb-2 text-xl font-semibold">Secure Shopping</h3>
+                <h3 className="mb-2 text-xl font-semibold">Сигурно Пазаруване</h3>
                 <p className="text-muted-foreground">
-                  Shop with confidence with our secure checkout and customer protection.
+                  Пазарувайте със сигурност с нашата защитена каса и защита на клиентите.
                 </p>
               </CardContent>
             </Card>
@@ -182,4 +182,3 @@ function ProductSkeleton() {
     </div>
   )
 }
-

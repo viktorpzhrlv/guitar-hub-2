@@ -37,8 +37,8 @@ export default function AdminCategoriesPage() {
     } catch (error) {
       console.error("Error loading categories:", error);
       toast({
-        title: "Error",
-        description: "Failed to load categories",
+        title: "Грешка",
+        description: "Неуспешно зареждане на категориите",
         variant: "destructive",
       });
     } finally {
@@ -53,14 +53,14 @@ export default function AdminCategoriesPage() {
       await deleteCategory(categoryToDelete);
       setCategories(categories.filter((category) => category.id !== categoryToDelete));
       toast({
-        title: "Category deleted",
-        description: "The category has been deleted successfully",
+        title: "Категорията е изтрита",
+        description: "Категорията беше изтрита успешно",
       });
     } catch (error) {
       console.error("Error deleting category:", error);
       toast({
-        title: "Error",
-        description: "Failed to delete category",
+        title: "Грешка",
+        description: "Неуспешно изтриване на категорията",
         variant: "destructive",
       });
     } finally {
@@ -100,11 +100,11 @@ export default function AdminCategoriesPage() {
   return (
     <AdminLayout>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Categories</h1>
+        <h1 className="text-2xl font-bold">Категории</h1>
         <Button asChild>
           <Link href="/admin/categories/new">
             <PlusCircle className="mr-2 h-4 w-4" />
-            Add Category
+            Добави Категория
           </Link>
         </Button>
       </div>
@@ -114,7 +114,7 @@ export default function AdminCategoriesPage() {
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search categories..."
+              placeholder="Търсене на категории..."
               className="pl-8"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -127,33 +127,33 @@ export default function AdminCategoriesPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[80px]">Image</TableHead>
+              <TableHead className="w-[80px]">Изображение</TableHead>
               <TableHead>
                 <Button
                   variant="ghost"
                   onClick={() => handleSort("name")}
                   className="flex items-center gap-1 p-0 font-medium"
                 >
-                  Name
+                  Име
                   <ArrowUpDown className="h-4 w-4" />
                 </Button>
               </TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Slug</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>Описание</TableHead>
+              <TableHead>Псевдоним</TableHead>
+              <TableHead className="text-right">Действия</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-8">
-                  Loading categories...
+                  Зареждане на категории...
                 </TableCell>
               </TableRow>
             ) : filteredCategories.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-8">
-                  No categories found
+                  Няма намерени категории
                 </TableCell>
               </TableRow>
             ) : (
@@ -202,7 +202,7 @@ export default function AdminCategoriesPage() {
                         <DropdownMenuItem asChild>
                           <Link href={`/admin/categories/${category.id}`}>
                             <Pencil className="mr-2 h-4 w-4" />
-                            Edit
+                            Редактиране
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -210,7 +210,7 @@ export default function AdminCategoriesPage() {
                           className="text-destructive focus:text-destructive"
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
+                          Изтриване
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -224,4 +224,3 @@ export default function AdminCategoriesPage() {
     </AdminLayout>
   );
 }
-

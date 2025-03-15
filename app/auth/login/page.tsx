@@ -14,11 +14,13 @@ import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/components/ui/use-toast"
 import { signInWithEmail, signInWithGoogle } from "@/lib/firebase/auth"
 
+// Zod схема за валидация на формата за вход
 const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  email: z.string().email("Моля, въведете валиден имейл адрес"),
+  password: z.string().min(6, "Паролата трябва да бъде поне 6 символа"),
 })
 
+// Тип за стойностите на формата за вход
 type LoginFormValues = z.infer<typeof loginSchema>
 
 export default function LoginPage() {
@@ -41,15 +43,15 @@ export default function LoginPage() {
     try {
       await signInWithEmail(data.email, data.password)
       toast({
-        title: "Login successful",
-        description: "Welcome back to Guitar Hub!",
+        title: "Успешно влизане",
+        description: "Добре дошли обратно в Guitar Hub!",
       })
       router.push(redirect)
     } catch (error: any) {
-      console.error("Login error:", error)
+      console.error("Грешка при влизане:", error)
       toast({
-        title: "Login failed",
-        description: error.message || "Invalid email or password",
+        title: "Неуспешно влизане",
+        description: error.message || "Невалиден имейл или парола",
         variant: "destructive",
       })
     } finally {
@@ -62,15 +64,15 @@ export default function LoginPage() {
     try {
       await signInWithGoogle()
       toast({
-        title: "Login successful",
-        description: "Welcome to Guitar Hub!",
+        title: "Успешно влизане",
+        description: "Добре дошли в Guitar Hub!",
       })
       router.push(redirect)
     } catch (error: any) {
-      console.error("Google login error:", error)
+      console.error("Грешка при влизане с Google:", error)
       toast({
-        title: "Login failed",
-        description: error.message || "Failed to sign in with Google",
+        title: "Неуспешно влизане",
+        description: error.message || "Неуспешно влизане с Google",
         variant: "destructive",
       })
     } finally {
@@ -82,8 +84,8 @@ export default function LoginPage() {
     <div className="container flex h-screen items-center justify-center">
       <Card className="mx-auto w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Login</CardTitle>
-          <CardDescription>Enter your email and password to access your account</CardDescription>
+          <CardTitle className="text-2xl font-bold">Влизане</CardTitle>
+          <CardDescription>Въведете вашия имейл и парола, за да влезете в акаунта си</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isLoading}>
@@ -105,7 +107,7 @@ export default function LoginPage() {
                 fill="#EA4335"
               />
             </svg>
-            Continue with Google
+            Продължете с Google
           </Button>
 
           <div className="relative">
@@ -113,7 +115,7 @@ export default function LoginPage() {
               <Separator />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+              <span className="bg-background px-2 text-muted-foreground">Или продължете с</span>
             </div>
           </div>
 
@@ -124,7 +126,7 @@ export default function LoginPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Имейл</FormLabel>
                     <FormControl>
                       <Input placeholder="name@example.com" {...field} />
                     </FormControl>
@@ -139,9 +141,9 @@ export default function LoginPage() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between">
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel>Парола</FormLabel>
                       <Link href="/auth/forgot-password" className="text-xs text-primary hover:underline">
-                        Forgot password?
+                        Забравена парола?
                       </Link>
                     </div>
                     <FormControl>
@@ -153,16 +155,16 @@ export default function LoginPage() {
               />
 
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Logging in..." : "Login"}
+                {isLoading ? "Влизане..." : "Влизане"}
               </Button>
             </form>
           </Form>
         </CardContent>
         <CardFooter className="flex justify-center">
           <p className="text-sm text-muted-foreground">
-            Don't have an account?{" "}
+            Нямате акаунт?{" "}
             <Link href="/auth/register" className="text-primary hover:underline">
-              Sign up
+              Регистрирайте се
             </Link>
           </p>
         </CardFooter>
@@ -170,4 +172,3 @@ export default function LoginPage() {
     </div>
   )
 }
-

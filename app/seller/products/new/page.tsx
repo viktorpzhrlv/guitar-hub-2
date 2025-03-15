@@ -21,11 +21,12 @@ import ProtectedRoute from "@/components/auth/protected-route"
 import { ImageUploader } from "@/components/ui/image-uploader"
 import type { Category } from "@/lib/types"
 
+// Zod схема за валидиране на формата за продукт
 const productSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
-  price: z.coerce.number().positive("Price must be positive"),
-  category: z.string().min(1, "Category is required"),
+  name: z.string().min(2, "Името трябва да бъде поне 2 символа"),
+  description: z.string().min(10, "Описанието трябва да бъде поне 10 символа"),
+  price: z.coerce.number().positive("Цената трябва да бъде положителна"),
+  category: z.string().min(1, "Категорията е задължителна"),
   specifications: z.record(z.string(), z.string()).optional(),
 })
 
@@ -52,24 +53,24 @@ export default function NewProductPage() {
     },
   })
 
-  // Load categories
+  // Зареждане на категориите
   useEffect(() => {
     const loadCategories = async () => {
       try {
         const data = await getCategories()
         setCategories(data)
       } catch (error) {
-        console.error("Error loading categories:", error)
+        console.error("Грешка при зареждане на категориите:", error)
         toast({
-          title: "Error",
-          description: "Failed to load categories",
+          title: "Грешка",
+          description: "Неуспешно зареждане на категориите",
           variant: "destructive",
         })
       }
     }
 
     loadCategories()
-  }, [toast]) // Add toast to dependency array
+  }, [toast]) // Добавяне на toast към списъка със зависимости
 
   const handleAddSpec = () => {
     setSpecs((prev) => [...prev, { key: "", value: "" }])
@@ -89,7 +90,7 @@ export default function NewProductPage() {
     setIsLoading(true)
 
     try {
-      // Process specifications
+      // Обработка на спецификациите
       const specifications: Record<string, string> = {}
       specs.forEach((spec) => {
         if (spec.key && spec.value) {
@@ -97,7 +98,7 @@ export default function NewProductPage() {
         }
       })
 
-      // Create product with the uploaded image URLs
+      // Създаване на продукт с качените URL адреси на изображенията
       await createProduct({
         name: data.name,
         description: data.description,
@@ -112,16 +113,16 @@ export default function NewProductPage() {
       })
 
       toast({
-        title: "Listing submitted",
-        description: "Your item has been submitted for approval",
+        title: "Обявата е подадена",
+        description: "Вашият артикул е подаден за одобрение",
       })
 
       router.push("/seller")
     } catch (error) {
-      console.error("Error creating product:", error)
+      console.error("Грешка при създаване на продукт:", error)
       toast({
-        title: "Error",
-        description: "Failed to create listing",
+        title: "Грешка",
+        description: "Неуспешно създаване на обява",
         variant: "destructive",
       })
     } finally {
@@ -134,16 +135,16 @@ export default function NewProductPage() {
       <div className="container py-10">
         <div className="mx-auto max-w-3xl">
           <div className="mb-6 flex items-center justify-between">
-            <h1 className="text-3xl font-bold">List a New Item</h1>
+            <h1 className="text-3xl font-bold">Създаване на нова обява</h1>
             <Button variant="outline" onClick={() => router.back()}>
-              Cancel
+              Отказ
             </Button>
           </div>
 
           <Card>
             <CardHeader>
-              <CardTitle>Item Details</CardTitle>
-              <CardDescription>Provide detailed information about the item you're selling</CardDescription>
+              <CardTitle>Детайли на артикула</CardTitle>
+              <CardDescription>Предоставете подробна информация за артикула, който продавате</CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...form}>
@@ -153,9 +154,9 @@ export default function NewProductPage() {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Item Name</FormLabel>
+                        <FormLabel>Име на артикула</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter item name" {...field} />
+                          <Input placeholder="Въведете име на артикула" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -167,7 +168,7 @@ export default function NewProductPage() {
                     name="price"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Price</FormLabel>
+                        <FormLabel>Цена</FormLabel>
                         <FormControl>
                           <Input type="number" placeholder="0.00" step="0.01" min="0" {...field} />
                         </FormControl>
@@ -181,11 +182,11 @@ export default function NewProductPage() {
                     name="category"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Category</FormLabel>
+                        <FormLabel>Категория</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select a category" />
+                              <SelectValue placeholder="Изберете категория" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -206,10 +207,10 @@ export default function NewProductPage() {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Description</FormLabel>
+                        <FormLabel>Описание</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="Provide a detailed description of your item"
+                            placeholder="Предоставете подробно описание на вашия артикул"
                             className="min-h-32"
                             {...field}
                           />
@@ -220,7 +221,7 @@ export default function NewProductPage() {
                   />
 
                   <div>
-                    <FormLabel>Item Images</FormLabel>
+                    <FormLabel>Снимки на артикула</FormLabel>
                     <div className="mt-2">
                       <ImageUploader
                         multiple={true}
@@ -232,21 +233,21 @@ export default function NewProductPage() {
 
                   <div>
                     <div className="flex items-center justify-between">
-                      <FormLabel>Specifications</FormLabel>
+                      <FormLabel>Спецификации</FormLabel>
                       <Button type="button" variant="outline" size="sm" onClick={handleAddSpec}>
-                        Add Specification
+                        Добави спецификация
                       </Button>
                     </div>
                     <div className="mt-2 space-y-4">
                       {specs.map((spec, index) => (
                         <div key={index} className="flex items-center gap-4">
                           <Input
-                            placeholder="Name (e.g., Color)"
+                            placeholder="Име (напр. Цвят)"
                             value={spec.key}
                             onChange={(e) => handleSpecChange(index, "key", e.target.value)}
                           />
                           <Input
-                            placeholder="Value (e.g., Black)"
+                            placeholder="Стойност (напр. Черен)"
                             value={spec.value}
                             onChange={(e) => handleSpecChange(index, "value", e.target.value)}
                           />
@@ -273,20 +274,20 @@ export default function NewProductPage() {
                   </div>
 
                   <div className="rounded-md bg-muted p-4">
-                    <h3 className="mb-2 text-sm font-medium">Important Notes</h3>
+                    <h3 className="mb-2 text-sm font-medium">Важни забележки</h3>
                     <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
-                      <li>Your listing will be reviewed by an admin before it appears on the site</li>
-                      <li>Please provide accurate information and clear photos</li>
-                      <li>Once approved, your item will be visible to all users</li>
+                      <li>Вашата обява ще бъде прегледана от администратор, преди да се появи на сайта</li>
+                      <li>Моля, предоставете точна информация и ясни снимки</li>
+                      <li>След като бъде одобрен, вашият артикул ще бъде видим за всички потребители</li>
                     </ul>
                   </div>
 
                   <div className="flex justify-end gap-4">
                     <Button type="button" variant="outline" onClick={() => router.back()}>
-                      Cancel
+                      Отказ
                     </Button>
                     <Button type="submit" disabled={isLoading}>
-                      {isLoading ? "Submitting..." : "Submit for Approval"}
+                      {isLoading ? "Изпращане..." : "Подаване за одобрение"}
                     </Button>
                   </div>
                 </form>
@@ -298,4 +299,3 @@ export default function NewProductPage() {
     </ProtectedRoute>
   )
 }
-

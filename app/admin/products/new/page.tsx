@@ -19,10 +19,10 @@ import type { Category } from "@/lib/types"
 import { X } from "lucide-react"
 
 const productSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
-  price: z.coerce.number().positive("Price must be positive"),
-  category: z.string().min(1, "Category is required"),
+  name: z.string().min(2, "Името трябва да бъде поне 2 символа"),
+  description: z.string().min(10, "Описанието трябва да бъде поне 10 символа"),
+  price: z.coerce.number().positive("Цената трябва да бъде положителна"),
+  category: z.string().min(1, "Категорията е задължителна"),
   status: z.enum(["available", "unavailable"]),
   specifications: z.record(z.string(), z.string()).optional(),
 })
@@ -57,10 +57,10 @@ export default function NewProductPage() {
         const data = await getCategories()
         setCategories(data)
       } catch (error) {
-        console.error("Error loading categories:", error)
+        console.error("Грешка при зареждане на категориите:", error)
         toast({
-          title: "Error",
-          description: "Failed to load categories",
+          title: "Грешка",
+          description: "Неуспешно зареждане на категориите",
           variant: "destructive",
         })
       }
@@ -104,16 +104,16 @@ export default function NewProductPage() {
       })
       
       toast({
-        title: "Product created",
-        description: "The product has been created successfully",
+        title: "Продуктът е създаден",
+        description: "Продуктът е създаден успешно",
       })
       
       router.push("/admin/products")
     } catch (error) {
-      console.error("Error creating product:", error)
+      console.error("Грешка при създаване на продукта:", error)
       toast({
-        title: "Error",
-        description: "Failed to create product",
+        title: "Грешка",
+        description: "Неуспешно създаване на продукта",
         variant: "destructive",
       })
     } finally {
@@ -124,9 +124,9 @@ export default function NewProductPage() {
   return (
     <AdminLayout>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Add New Product</h1>
+        <h1 className="text-2xl font-bold">Добавяне на нов продукт</h1>
         <Button variant="outline" onClick={() => router.back()}>
-          Cancel
+          Отказ
         </Button>
       </div>
       <div className="mt-6">
@@ -138,9 +138,9 @@ export default function NewProductPage() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Product Name</FormLabel>
+                    <FormLabel>Име на продукта</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter product name" {...field} />
+                      <Input placeholder="Въведете име на продукта" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -151,7 +151,7 @@ export default function NewProductPage() {
                 name="price"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Price</FormLabel>
+                    <FormLabel>Цена</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="0.00" step="0.01" min="0" {...field} />
                     </FormControl>
@@ -164,11 +164,11 @@ export default function NewProductPage() {
                 name="category"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Category</FormLabel>
+                    <FormLabel>Категория</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a category" />
+                          <SelectValue placeholder="Изберете категория" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -188,16 +188,16 @@ export default function NewProductPage() {
                 name="status"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Status</FormLabel>
+                    <FormLabel>Статус</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select status" />
+                          <SelectValue placeholder="Изберете статус" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="available">Available</SelectItem>
-                        <SelectItem value="unavailable">Unavailable</SelectItem>
+                        <SelectItem value="available">Наличен</SelectItem>
+                        <SelectItem value="unavailable">Неналичен</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -210,9 +210,9 @@ export default function NewProductPage() {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Описание</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Enter product description" className="min-h-32" {...field} />
+                    <Textarea placeholder="Въведете описание на продукта" className="min-h-32" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -220,7 +220,7 @@ export default function NewProductPage() {
             />
             
             <div>
-              <FormLabel>Product Images</FormLabel>
+              <FormLabel>Снимки на продукта</FormLabel>
               <div className="mt-2">
                 <ImageUploader
                   multiple={true}
@@ -232,21 +232,21 @@ export default function NewProductPage() {
             
             <div>
               <div className="flex items-center justify-between">
-                <FormLabel>Specifications</FormLabel>
+                <FormLabel>Спецификации</FormLabel>
                 <Button type="button" variant="outline" size="sm" onClick={handleAddSpec}>
-                  Add Specification
+                  Добави спецификация
                 </Button>
               </div>
               <div className="mt-2 space-y-4">
                 {specs.map((spec, index) => (
                   <div key={index} className="flex items-center gap-4">
                     <Input
-                      placeholder="Name (e.g., Color)"
+                      placeholder="Име (например, Цвят)"
                       value={spec.key}
                       onChange={(e) => handleSpecChange(index, "key", e.target.value)}
                     />
                     <Input
-                      placeholder="Value (e.g., Black)"
+                      placeholder="Стойност (например, Черен)"
                       value={spec.value}
                       onChange={(e) => handleSpecChange(index, "value", e.target.value)}
                     />
@@ -260,10 +260,10 @@ export default function NewProductPage() {
             
             <div className="flex justify-end gap-4">
               <Button type="button" variant="outline" onClick={() => router.back()}>
-                Cancel
+                Отказ
               </Button>
               <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Creating..." : "Create Product"}
+                {isLoading ? "Създаване..." : "Създаване на продукт"}
               </Button>
             </div>
           </form>
@@ -272,4 +272,3 @@ export default function NewProductPage() {
     </AdminLayout>
   )
 }
-

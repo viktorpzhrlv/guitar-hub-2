@@ -17,12 +17,12 @@ import { uploadImage } from "@/lib/image-upload"
 import AdminLayout from "@/components/layout/admin-layout"
 
 const categorySchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
+  name: z.string().min(2, "Името трябва да бъде поне 2 символа"),
+  description: z.string().min(10, "Описанието трябва да бъде поне 10 символа"),
   slug: z
     .string()
-    .min(2, "Slug must be at least 2 characters")
-    .regex(/^[a-z0-9-]+$/, "Slug must contain only lowercase letters, numbers, and hyphens"),
+    .min(2, "Slug трябва да бъде поне 2 символа")
+    .regex(/^[a-z0-9-]+$/, "Slug трябва да съдържа само малки букви, цифри и тирета"),
 })
 
 type CategoryFormValues = z.infer<typeof categorySchema>
@@ -91,16 +91,16 @@ export default function NewCategoryPage() {
       })
 
       toast({
-        title: "Category created",
-        description: "The category has been created successfully",
+        title: "Категорията е създадена",
+        description: "Категорията е създадена успешно",
       })
 
       router.push("/admin/categories")
     } catch (error) {
-      console.error("Error creating category:", error)
+      console.error("Грешка при създаване на категория:", error)
       toast({
-        title: "Error",
-        description: "Failed to create category",
+        title: "Грешка",
+        description: "Неуспешно създаване на категория",
         variant: "destructive",
       })
     } finally {
@@ -111,9 +111,9 @@ export default function NewCategoryPage() {
   return (
     <AdminLayout>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Add New Category</h1>
+        <h1 className="text-2xl font-bold">Добавяне на нова категория</h1>
         <Button variant="outline" onClick={() => router.back()}>
-          Cancel
+          Отказ
         </Button>
       </div>
 
@@ -127,10 +127,10 @@ export default function NewCategoryPage() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Category Name</FormLabel>
+                      <FormLabel>Име на категорията</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Enter category name"
+                          placeholder="Въведете име на категорията"
                           {...field}
                           onChange={(e) => {
                             field.onChange(e)
@@ -154,7 +154,7 @@ export default function NewCategoryPage() {
                       <div className="flex items-center justify-between">
                         <FormLabel>Slug</FormLabel>
                         <Button type="button" variant="ghost" size="sm" onClick={generateSlug} className="text-xs">
-                          Generate from name
+                          Генерирай от името
                         </Button>
                       </div>
                       <FormControl>
@@ -170,9 +170,9 @@ export default function NewCategoryPage() {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description</FormLabel>
+                      <FormLabel>Описание</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Enter category description" className="min-h-32" {...field} />
+                        <Textarea placeholder="Въведете описание на категорията" className="min-h-32" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -181,7 +181,7 @@ export default function NewCategoryPage() {
               </div>
 
               <div>
-                <FormLabel>Category Image</FormLabel>
+                <FormLabel>Изображение на категорията</FormLabel>
                 <div className="mt-2">
                   {imagePreview ? (
                     <div className="relative aspect-square overflow-hidden rounded-md border">
@@ -235,13 +235,13 @@ export default function NewCategoryPage() {
                           <circle cx="9" cy="9" r="2" />
                           <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
                         </svg>
-                        <span className="text-sm text-muted-foreground">Upload Image</span>
+                        <span className="text-sm text-muted-foreground">Качи изображение</span>
                         <Input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
                       </label>
                     </div>
                   )}
                   <p className="mt-2 text-xs text-muted-foreground">
-                    Recommended: Square image, at least 500x500 pixels
+                    Препоръчително: Квадратно изображение, поне 500x500 пиксела
                   </p>
                 </div>
               </div>
@@ -249,10 +249,10 @@ export default function NewCategoryPage() {
 
             <div className="flex justify-end gap-4">
               <Button type="button" variant="outline" onClick={() => router.back()}>
-                Cancel
+                Отказ
               </Button>
               <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Creating..." : "Create Category"}
+                {isLoading ? "Създаване..." : "Създай категория"}
               </Button>
             </div>
           </form>
@@ -261,4 +261,3 @@ export default function NewCategoryPage() {
     </AdminLayout>
   )
 }
-

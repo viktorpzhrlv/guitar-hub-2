@@ -10,11 +10,12 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
 
+// Zod схема за валидация на формата за контакт
 const contactFormSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  subject: z.string().min(5, "Subject must be at least 5 characters"),
-  message: z.string().min(10, "Message must be at least 10 characters"),
+  name: z.string().min(2, "Името трябва да бъде поне 2 символа"),
+  email: z.string().email("Моля, въведете валиден имейл адрес"),
+  subject: z.string().min(5, "Темата трябва да бъде поне 5 символа"),
+  message: z.string().min(10, "Съобщението трябва да бъде поне 10 символа"),
 })
 
 type ContactFormValues = z.infer<typeof contactFormSchema>
@@ -37,20 +38,20 @@ export default function ContactPage() {
     setIsSubmitting(true)
 
     try {
-      // In a real application, you would send this data to your backend
-      // For demo purposes, we'll just simulate a successful submission
+      // В реално приложение, ще изпратите тези данни към вашия backend
+      // За демо цели, ще симулираме успешно изпращане
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
       toast({
-        title: "Message sent!",
-        description: "We'll get back to you as soon as possible.",
+        title: "Съобщението е изпратено!",
+        description: "Ще се свържем с вас възможно най-скоро.",
       })
 
       form.reset()
     } catch (error) {
       toast({
-        title: "Something went wrong",
-        description: "Please try again later.",
+        title: "Нещо се обърка",
+        description: "Моля, опитайте отново по-късно.",
         variant: "destructive",
       })
     } finally {
@@ -61,17 +62,17 @@ export default function ContactPage() {
   return (
     <div className="container mx-auto px-4 py-8 md:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl text-center">
-        <h1 className="text-3xl font-bold md:text-4xl">Contact Us</h1>
+        <h1 className="text-3xl font-bold md:text-4xl">Свържете се с нас</h1>
         <p className="mt-4 text-muted-foreground">
-          Have questions about our products or need assistance? We're here to help!
+          Имате въпроси относно нашите продукти или нужда от помощ? Ние сме тук, за да помогнем!
         </p>
       </div>
 
       <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
         <div>
-          <h2 className="text-xl font-semibold">Get in Touch</h2>
+          <h2 className="text-xl font-semibold">Свържете се</h2>
           <p className="mt-2 text-muted-foreground">
-            Fill out the form and our team will get back to you as soon as possible.
+            Попълнете формата и нашият екип ще се свърже с вас възможно най-скоро.
           </p>
 
           <div className="mt-6 space-y-4">
@@ -93,7 +94,7 @@ export default function ContactPage() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-medium">Phone</h3>
+                <h3 className="font-medium">Телефон</h3>
                 <p className="mt-1 text-sm text-muted-foreground">+1 (555) 123-4567</p>
               </div>
             </div>
@@ -116,7 +117,7 @@ export default function ContactPage() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-medium">Email</h3>
+                <h3 className="font-medium">Имейл</h3>
                 <p className="mt-1 text-sm text-muted-foreground">info@guitarhub.com</p>
               </div>
             </div>
@@ -139,26 +140,26 @@ export default function ContactPage() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-medium">Address</h3>
-                <p className="mt-1 text-sm text-muted-foreground">123 Guitar Street, Music City, MC 12345</p>
+                <h3 className="font-medium">Адрес</h3>
+                <p className="mt-1 text-sm text-muted-foreground">ул. "Китара" 123, Музикален град, МГ 12345</p>
               </div>
             </div>
           </div>
 
           <div className="mt-8">
-            <h2 className="text-xl font-semibold">Business Hours</h2>
+            <h2 className="text-xl font-semibold">Работно време</h2>
             <div className="mt-4 space-y-2">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Monday - Friday</span>
-                <span>9:00 AM - 6:00 PM</span>
+                <span className="text-muted-foreground">Понеделник - Петък</span>
+                <span>9:00 - 18:00</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Saturday</span>
-                <span>10:00 AM - 4:00 PM</span>
+                <span className="text-muted-foreground">Събота</span>
+                <span>10:00 - 16:00</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Sunday</span>
-                <span>Closed</span>
+                <span className="text-muted-foreground">Неделя</span>
+                <span>Затворено</span>
               </div>
             </div>
           </div>
@@ -172,9 +173,9 @@ export default function ContactPage() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Име</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your name" {...field} />
+                      <Input placeholder="Вашето име" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -186,9 +187,9 @@ export default function ContactPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Имейл</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your email address" {...field} />
+                      <Input placeholder="Вашият имейл адрес" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -200,9 +201,9 @@ export default function ContactPage() {
                 name="subject"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Subject</FormLabel>
+                    <FormLabel>Тема</FormLabel>
                     <FormControl>
-                      <Input placeholder="What is this regarding?" {...field} />
+                      <Input placeholder="Относно какво е това?" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -214,9 +215,9 @@ export default function ContactPage() {
                 name="message"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Message</FormLabel>
+                    <FormLabel>Съобщение</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="How can we help you?" className="min-h-32" {...field} />
+                      <Textarea placeholder="Как можем да ви помогнем?" className="min-h-32" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -224,7 +225,7 @@ export default function ContactPage() {
               />
 
               <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Sending..." : "Send Message"}
+                {isSubmitting ? "Изпращане..." : "Изпрати съобщение"}
               </Button>
             </form>
           </Form>
@@ -246,4 +247,3 @@ export default function ContactPage() {
     </div>
   )
 }
-

@@ -44,10 +44,10 @@ export default function UsersPage() {
 
         setUsers(userData)
       } catch (error) {
-        console.error("Error fetching users:", error)
+        console.error("Грешка при извличане на потребители:", error)
         toast({
-          title: "Error",
-          description: "Failed to load users",
+          title: "Грешка",
+          description: "Неуспешно зареждане на потребители",
           variant: "destructive",
         })
       } finally {
@@ -63,18 +63,18 @@ export default function UsersPage() {
       const userRef = doc(db, "users", userId)
       await updateDoc(userRef, { role: newRole })
 
-      // Update local state
+      // Актуализиране на локалното състояние
       setUsers((prevUsers) => prevUsers.map((user) => (user.id === userId ? { ...user, role: newRole } : user)))
 
       toast({
-        title: "Role updated",
-        description: "User role has been updated successfully",
+        title: "Ролята е актуализирана",
+        description: "Ролята на потребителя беше актуализирана успешно",
       })
     } catch (error) {
-      console.error("Error updating role:", error)
+      console.error("Грешка при актуализиране на ролята:", error)
       toast({
-        title: "Error",
-        description: "Failed to update user role",
+        title: "Грешка",
+        description: "Неуспешно актуализиране на ролята на потребителя",
         variant: "destructive",
       })
     }
@@ -89,7 +89,7 @@ export default function UsersPage() {
   return (
     <AdminLayout>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Users</h1>
+        <h1 className="text-2xl font-bold">Потребители</h1>
       </div>
 
       <div className="mt-6">
@@ -97,7 +97,7 @@ export default function UsersPage() {
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search users..."
+              placeholder="Търсене на потребители..."
               className="pl-8"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -110,24 +110,24 @@ export default function UsersPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Created At</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>Име</TableHead>
+              <TableHead>Имейл</TableHead>
+              <TableHead>Роля</TableHead>
+              <TableHead>Създаден на</TableHead>
+              <TableHead className="text-right">Действия</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-8">
-                  Loading users...
+                  Зареждане на потребители...
                 </TableCell>
               </TableRow>
             ) : filteredUsers.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-8">
-                  No users found
+                  Не са намерени потребители
                 </TableCell>
               </TableRow>
             ) : (
@@ -141,11 +141,11 @@ export default function UsersPage() {
                       onValueChange={(value) => handleRoleChange(user.id, value as UserRole)}
                     >
                       <SelectTrigger className="w-32">
-                        <SelectValue placeholder="Select role" />
+                        <SelectValue placeholder="Изберете роля" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="user">User</SelectItem>
-                        <SelectItem value="admin">Admin</SelectItem>
+                        <SelectItem value="user">Потребител</SelectItem>
+                        <SelectItem value="admin">Админ</SelectItem>
                       </SelectContent>
                     </Select>
                   </TableCell>
@@ -154,7 +154,7 @@ export default function UsersPage() {
                   </TableCell>
                   <TableCell className="text-right">
                     <Button variant="ghost" size="sm">
-                      View Details
+                      Вижте детайли
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -166,4 +166,3 @@ export default function UsersPage() {
     </AdminLayout>
   )
 }
-

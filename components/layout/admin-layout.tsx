@@ -26,17 +26,17 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   const navigation = [
-    { name: "Products", href: "/admin/products", icon: Package },
-    { name: "Categories", href: "/admin/categories", icon: LayoutGrid },
-    { name: "Orders", href: "/admin/orders", icon: ShoppingBag },
-    { name: "Users", href: "/admin/users", icon: Users },
-    { name: "Approvals", href: "/admin/approvals", icon: CheckCircle },
+    { name: "Продукти", href: "/admin/products", icon: Package },
+    { name: "Категории", href: "/admin/categories", icon: LayoutGrid },
+    { name: "Поръчки", href: "/admin/orders", icon: ShoppingBag },
+    { name: "Потребители", href: "/admin/users", icon: Users },
+    { name: "Одобрения", href: "/admin/approvals", icon: CheckCircle },
   ]
 
   return (
     <ProtectedRoute adminOnly>
       <div className="flex min-h-screen flex-col">
-        {/* Mobile header */}
+        {/* Mobile header - Мобилен хедър */}
         <header className="border-b bg-background px-4 py-3 lg:hidden">
           <div className="flex items-center justify-between">
             <Link href="/admin/products" className="flex items-center gap-2 font-semibold">
@@ -79,7 +79,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     <div className="border-t py-4">
                       <Button variant="outline" className="w-full justify-start" onClick={handleLogout}>
                         <LogOut className="mr-2 h-5 w-5" />
-                        Logout
+                        Изход
                       </Button>
                     </div>
                   </div>
@@ -90,7 +90,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </header>
 
         <div className="flex flex-1 flex-col lg:flex-row">
-          {/* Sidebar (desktop) */}
+          {/* Sidebar (desktop) - Странична лента (десктоп) */}
           <aside className="hidden w-64 flex-shrink-0 border-r bg-muted/20 lg:block">
             <div className="flex h-full flex-col">
               <div className="flex items-center gap-2 border-b px-6 py-4 font-semibold">
@@ -119,17 +119,16 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <div className="border-t p-4">
                 <Button variant="outline" className="w-full justify-start" onClick={handleLogout}>
                   <LogOut className="mr-2 h-5 w-5" />
-                  Logout
+                  Изход
                 </Button>
               </div>
             </div>
           </aside>
 
-          {/* Main content */}
+          {/* Main content - Основно съдържание */}
           <main className="flex-1 overflow-auto p-6">{children}</main>
         </div>
       </div>
     </ProtectedRoute>
   )
 }
-

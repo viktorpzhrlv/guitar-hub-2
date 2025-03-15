@@ -66,8 +66,8 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
 
         if (!productData) {
           toast({
-            title: "Error",
-            description: "Product not found",
+            title: "Грешка",
+            description: "Продуктът не е намерен",
             variant: "destructive",
           })
           router.push("/seller")
@@ -77,8 +77,8 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
         // Check if user is the seller
         if (user && productData.sellerId !== user.uid) {
           toast({
-            title: "Unauthorized",
-            description: "You don't have permission to edit this product",
+            title: "Неоторизиран",
+            description: "Нямате разрешение да редактирате този продукт",
             variant: "destructive",
           })
           router.push("/seller")
@@ -110,10 +110,10 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
           }
         }
       } catch (error) {
-        console.error("Error loading data:", error)
+        console.error("Грешка при зареждане на данни:", error)
         toast({
-          title: "Error",
-          description: "Failed to load product data",
+          title: "Грешка",
+          description: "Неуспешно зареждане на данни за продукта",
           variant: "destructive",
         })
       } finally {
@@ -200,16 +200,16 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
       })
 
       toast({
-        title: "Listing updated",
-        description: "Your item has been updated and submitted for approval",
+        title: "Обявата е обновена",
+        description: "Вашият артикул е обновен и изпратен за одобрение",
       })
 
       router.push("/seller")
     } catch (error) {
-      console.error("Error updating product:", error)
+      console.error("Грешка при обновяване на продукта:", error)
       toast({
-        title: "Error",
-        description: "Failed to update listing",
+        title: "Грешка",
+        description: "Неуспешно обновяване на обявата",
         variant: "destructive",
       })
     } finally {
@@ -238,11 +238,11 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
           <div className="mx-auto max-w-3xl">
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>Product not found or you don't have permission to edit it.</AlertDescription>
+              <AlertTitle>Грешка</AlertTitle>
+              <AlertDescription>Продуктът не е намерен или нямате разрешение да го редактирате.</AlertDescription>
             </Alert>
             <div className="mt-4 flex justify-center">
-              <Button onClick={() => router.push("/seller")}>Back to Dashboard</Button>
+              <Button onClick={() => router.push("/seller")}>Обратно към таблото</Button>
             </div>
           </div>
         </div>
@@ -255,26 +255,26 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
       <div className="container py-10">
         <div className="mx-auto max-w-3xl">
           <div className="mb-6 flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Edit Listing</h1>
+            <h1 className="text-3xl font-bold">Редактиране на обява</h1>
             <Button variant="outline" onClick={() => router.back()}>
-              Cancel
+              Отказ
             </Button>
           </div>
 
           {product.approvalStatus === "rejected" && (
             <Alert variant="destructive" className="mb-6">
               <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Listing Rejected</AlertTitle>
+              <AlertTitle>Обявата е отхвърлена</AlertTitle>
               <AlertDescription>
-                {product.adminNotes ? product.adminNotes : "Your listing was rejected. Please review and update it."}
+                {product.adminNotes ? product.adminNotes : "Вашата обява беше отхвърлена. Моля, прегледайте и я обновете."}
               </AlertDescription>
             </Alert>
           )}
 
           <Card>
             <CardHeader>
-              <CardTitle>Item Details</CardTitle>
-              <CardDescription>Update the information about your item</CardDescription>
+              <CardTitle>Детайли за артикула</CardTitle>
+              <CardDescription>Обновете информацията за вашия артикул</CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...form}>
@@ -284,9 +284,9 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Item Name</FormLabel>
+                        <FormLabel>Име на артикула</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter item name" {...field} />
+                          <Input placeholder="Въведете име на артикула" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -298,7 +298,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                     name="price"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Price</FormLabel>
+                        <FormLabel>Цена</FormLabel>
                         <FormControl>
                           <Input type="number" placeholder="0.00" step="0.01" min="0" {...field} />
                         </FormControl>
@@ -312,11 +312,11 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                     name="category"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Category</FormLabel>
+                        <FormLabel>Категория</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select a category" />
+                              <SelectValue placeholder="Изберете категория" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -337,10 +337,10 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Description</FormLabel>
+                        <FormLabel>Описание</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="Provide a detailed description of your item"
+                            placeholder="Предоставете детайлно описание на вашия артикул"
                             className="min-h-32"
                             {...field}
                           />
@@ -351,12 +351,12 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                   />
 
                   <div>
-                    <FormLabel>Item Images</FormLabel>
+                    <FormLabel>Снимки на артикула</FormLabel>
 
                     {/* Existing Images */}
                     {existingImages.length > 0 && (
                       <>
-                        <p className="mt-2 text-sm text-muted-foreground">Existing Images</p>
+                        <p className="mt-2 text-sm text-muted-foreground">Съществуващи снимки</p>
                         <div className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
                           {existingImages.map((url, index) => (
                             <div
@@ -398,7 +398,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                     )}
 
                     {/* New Images */}
-                    <p className="mt-4 text-sm text-muted-foreground">Add New Images</p>
+                    <p className="mt-4 text-sm text-muted-foreground">Добавете нови снимки</p>
                     <div className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
                       {imageUrls.map((url, index) => (
                         <div key={`new-${index}`} className="relative aspect-square overflow-hidden rounded-md border">
@@ -452,7 +452,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                             <circle cx="9" cy="9" r="2" />
                             <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
                           </svg>
-                          <span className="text-sm text-muted-foreground">Upload Image</span>
+                          <span className="text-sm text-muted-foreground">Качете снимка</span>
                           <Input
                             type="file"
                             accept="image/*"
@@ -467,21 +467,21 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
 
                   <div>
                     <div className="flex items-center justify-between">
-                      <FormLabel>Specifications</FormLabel>
+                      <FormLabel>Спецификации</FormLabel>
                       <Button type="button" variant="outline" size="sm" onClick={handleAddSpec}>
-                        Add Specification
+                        Добавете спецификация
                       </Button>
                     </div>
                     <div className="mt-2 space-y-4">
                       {specs.map((spec, index) => (
                         <div key={index} className="flex items-center gap-4">
                           <Input
-                            placeholder="Name (e.g., Color)"
+                            placeholder="Име (например, Цвят)"
                             value={spec.key}
                             onChange={(e) => handleSpecChange(index, "key", e.target.value)}
                           />
                           <Input
-                            placeholder="Value (e.g., Black)"
+                            placeholder="Стойност (например, Черен)"
                             value={spec.value}
                             onChange={(e) => handleSpecChange(index, "value", e.target.value)}
                           />
@@ -508,20 +508,20 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                   </div>
 
                   <div className="rounded-md bg-muted p-4">
-                    <h3 className="mb-2 text-sm font-medium">Important Notes</h3>
+                    <h3 className="mb-2 text-sm font-medium">Важни забележки</h3>
                     <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
-                      <li>Your updated listing will need to be reviewed again by an admin</li>
-                      <li>The item will not be visible on the site until approved</li>
-                      <li>You will be notified once your listing is approved or rejected</li>
+                      <li>Вашата обновена обява ще трябва да бъде прегледана отново от администратор</li>
+                      <li>Артикулът няма да бъде видим на сайта, докато не бъде одобрен</li>
+                      <li>Ще бъдете уведомени, след като обявата ви бъде одобрена или отхвърлена</li>
                     </ul>
                   </div>
 
                   <div className="flex justify-end gap-4">
                     <Button type="button" variant="outline" onClick={() => router.back()}>
-                      Cancel
+                      Отказ
                     </Button>
                     <Button type="submit" disabled={isSaving}>
-                      {isSaving ? "Saving..." : "Save Changes"}
+                      {isSaving ? "Запазване..." : "Запазване на промените"}
                     </Button>
                   </div>
                 </form>
@@ -533,4 +533,3 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
     </ProtectedRoute>
   )
 }
-

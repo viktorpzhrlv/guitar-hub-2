@@ -48,26 +48,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
       switch (action) {
         case "added":
           toast({
-            title: "Added to cart",
-            description: `${itemName} added to your cart.`,
+            title: "Добавено в количката",
+            description: `${itemName} е добавен/а в количката ви.`,
           })
           break
         case "alreadyExists":
           toast({
-            title: "Already in cart",
-            description: `${itemName} is already in your cart.`,
+            title: "Вече е в количката",
+            description: `${itemName} вече е в количката ви.`,
           })
           break
         case "removed":
           toast({
-            title: "Removed from cart",
-            description: `${itemName} removed from your cart.`,
+            title: "Премахнато от количката",
+            description: `${itemName} е премахнат/а от количката ви.`,
           })
           break
         case "cleared":
           toast({
-            title: "Cart cleared",
-            description: "All items have been removed from your cart.",
+            title: "Количката е изчистена",
+            description: "Всички артикули бяха премахнати от вашата количка.",
           })
           break
       }
@@ -142,8 +142,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 export function useCart() {
   const context = useContext(CartContext)
   if (context === undefined) {
-    throw new Error("useCart must be used within a CartProvider")
+    throw new Error("useCart трябва да се използва в рамките на CartProvider")
   }
   return context
 }
-

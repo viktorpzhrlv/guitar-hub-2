@@ -1,13 +1,16 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { ShoppingCart, Menu, X, Guitar, Search, User, LogOut, Settings, ShoppingBag } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,23 +23,20 @@ import { useCart } from "@/lib/cart-context"
 import { useAuth } from "@/lib/auth-context"
 import { isAdmin } from "@/lib/firebase/auth"
 
-const navigation = [
-  { name: "Home", href: "/" },
-  { name: "Electric", href: "/category/electric" },
-  { name: "Acoustic", href: "/category/acoustic" },
-  { name: "Bass", href: "/category/bass" },
-  { name: "Amplifiers", href: "/category/amplifiers" },
-  { name: "Effects", href: "/category/effects" },
-  { name: "Accessories", href: "/category/accessories" },
-  { name: "About", href: "/about" },
-  { name: "Contact", href: "/contact" },
-]
-
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
   const pathname = usePathname()
+  const router = useRouter()
   const { totalItems } = useCart()
   const { user, signOut } = useAuth()
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
+    }
+  }
 
   return (
     <header className="bg-background sticky top-0 z-40 w-full border-b">
@@ -53,28 +53,21 @@ export default function Header() {
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5"
             onClick={() => setMobileMenuOpen(true)}
           >
-            <span className="sr-only">Open main menu</span>
+            <span className="sr-only">Отвори главното меню</span>
             <Menu className="h-6 w-6" aria-hidden="true" />
           </Button>
         </div>
-        <div className="hidden lg:flex lg:gap-x-6">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`text-sm font-semibold leading-6 ${
-                pathname === item.href ? "text-primary" : "text-foreground hover:text-primary"
-              }`}
-            >
-              {item.name}
-            </Link>
-          ))}
-        </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-4">
-          <div className="relative w-full max-w-sm">
+          <form onSubmit={handleSearch} className="relative w-full max-w-md">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input type="search" placeholder="Search products..." className="w-full pl-8" />
-          </div>
+            <Input
+              type="search"
+              placeholder="Търсене на продукти..."
+              className="w-full pl-8"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </form>
 
           <Sheet>
             <SheetTrigger asChild>
@@ -106,14 +99,21 @@ export default function Header() {
                 <DropdownMenuItem asChild>
                   <Link href="/profile" className="flex items-center">
                     <User className="mr-2 h-4 w-4" />
-                    Profile
+                    Профил
                   </Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem asChild>
                   <Link href="/seller" className="flex items-center">
                     <ShoppingBag className="mr-2 h-4 w-4" />
-                    Seller Dashboard
+                    Панел за продавачи
+                  </Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem asChild>
+                  <Link href="/orders" className="flex items-center">
+                    <ShoppingBag className="mr-2 h-4 w-4" />
+                    Моите поръчки
                   </Link>
                 </DropdownMenuItem>
 
@@ -121,7 +121,7 @@ export default function Header() {
                   <DropdownMenuItem asChild>
                     <Link href="/admin/products" className="flex items-center">
                       <Settings className="mr-2 h-4 w-4" />
-                      Admin Dashboard
+                      Административен панел
                     </Link>
                   </DropdownMenuItem>
                 )}
@@ -130,13 +130,13 @@ export default function Header() {
 
                 <DropdownMenuItem onClick={signOut} className="flex items-center">
                   <LogOut className="mr-2 h-4 w-4" />
-                  Sign out
+                  Изход
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <Button asChild variant="default">
-              <Link href="/auth/login">Sign in</Link>
+              <Link href="/auth/login">Вход</Link>
             </Button>
           )}
         </div>
@@ -152,37 +152,29 @@ export default function Header() {
               <span className="text-xl font-bold">Guitar Hub</span>
             </Link>
             <Button variant="ghost" className="-m-2.5 rounded-md p-2.5" onClick={() => setMobileMenuOpen(false)}>
-              <span className="sr-only">Close menu</span>
+              <span className="sr-only">Затвори менюто</span>
               <X className="h-6 w-6" aria-hidden="true" />
             </Button>
           </div>
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
-              <div className="space-y-2 py-6">
-                {navigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 ${
-                      pathname === item.href ? "bg-muted text-primary" : "text-foreground hover:bg-muted"
-                    }`}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
               <div className="py-6">
-                <div className="relative w-full mb-4">
+                <form onSubmit={handleSearch} className="relative w-full mb-4">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input type="search" placeholder="Search products..." className="w-full pl-8" />
-                </div>
+                  <Input
+                    type="search"
+                    placeholder="Търсене на продукти..."
+                    className="w-full pl-8"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </form>
 
                 <Sheet>
                   <SheetTrigger asChild>
                     <Button className="w-full mb-4">
                       <ShoppingCart className="mr-2 h-5 w-5" />
-                      View Cart
+                      Виж количката
                       {totalItems > 0 && (
                         <span className="ml-2 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs text-primary">
                           {totalItems}
@@ -215,7 +207,7 @@ export default function Header() {
                       className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-muted"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Profile
+                      Профил
                     </Link>
 
                     <Link
@@ -223,7 +215,15 @@ export default function Header() {
                       className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-muted"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Seller Dashboard
+                      Панел за продавачи
+                    </Link>
+
+                    <Link
+                      href="/orders"
+                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-muted"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Моите поръчки
                     </Link>
 
                     {isAdmin(user) && (
@@ -232,7 +232,7 @@ export default function Header() {
                         className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-muted"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        Admin Dashboard
+                        Административен панел
                       </Link>
                     )}
 
@@ -245,19 +245,19 @@ export default function Header() {
                       }}
                     >
                       <LogOut className="mr-2 h-4 w-4" />
-                      Sign out
+                      Изход
                     </Button>
                   </div>
                 ) : (
                   <div className="flex gap-2">
                     <Button asChild className="w-full">
                       <Link href="/auth/login" onClick={() => setMobileMenuOpen(false)}>
-                        Sign in
+                        Вход
                       </Link>
                     </Button>
                     <Button asChild variant="outline" className="w-full">
                       <Link href="/auth/register" onClick={() => setMobileMenuOpen(false)}>
-                        Sign up
+                        Регистрация
                       </Link>
                     </Button>
                   </div>
@@ -276,17 +276,16 @@ function CartSheet() {
 
   return (
     <div className="flex h-full flex-col">
-      <SheetTitle className="sr-only">Shopping Cart</SheetTitle>
       <div className="flex items-center justify-between border-b pb-4">
-        <h2 className="text-lg font-semibold">Shopping Cart</h2>
+        <h2 className="text-lg font-semibold">Количка за пазаруване</h2>
         <ShoppingCart className="h-5 w-5" />
       </div>
 
       {items.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center">
           <ShoppingCart className="h-16 w-16 text-muted-foreground mb-4" />
-          <p className="text-lg font-medium">Your cart is empty</p>
-          <p className="text-sm text-muted-foreground mt-1">Add some products to your cart</p>
+          <p className="text-lg font-medium">Вашата количка е празна</p>
+          <p className="text-sm text-muted-foreground mt-1">Добавете продукти към вашата количка</p>
         </div>
       ) : (
         <>
@@ -316,7 +315,7 @@ function CartSheet() {
                         className="font-medium text-destructive hover:text-destructive/80"
                         onClick={() => removeItem(item.id)}
                       >
-                        Remove
+                        Премахни
                       </button>
                     </div>
                   </div>
@@ -326,20 +325,20 @@ function CartSheet() {
           </div>
           <div className="border-t pt-4">
             <div className="flex justify-between text-base font-medium">
-              <p>Subtotal</p>
+              <p>Междинна сума</p>
               <p>${totalPrice.toFixed(2)}</p>
             </div>
-            <p className="mt-0.5 text-sm text-muted-foreground">Shipping and taxes calculated at checkout.</p>
+            <p className="mt-0.5 text-sm text-muted-foreground">Доставката и данъците се изчисляват при плащане.</p>
             <div className="mt-4">
               <Button asChild className="w-full">
-                <Link href="/checkout">Checkout</Link>
+                <Link href="/checkout">Плащане</Link>
               </Button>
             </div>
             <div className="mt-2 flex justify-center text-center text-sm text-muted-foreground">
               <p>
-                or{" "}
+                или{" "}
                 <Link href="/cart" className="font-medium text-primary hover:text-primary/80">
-                  View Cart
+                  Виж количката
                 </Link>
               </p>
             </div>
@@ -349,4 +348,3 @@ function CartSheet() {
     </div>
   )
 }
-

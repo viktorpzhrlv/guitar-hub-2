@@ -14,15 +14,16 @@ import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/components/ui/use-toast"
 import { signUpWithEmail, signInWithGoogle } from "@/lib/firebase/auth"
 
+// Zod схема за валидация на формата за регистрация
 const registerSchema = z
   .object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.string().email("Please enter a valid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string().min(6, "Password must be at least 6 characters"),
+    name: z.string().min(2, "Името трябва да съдържа поне 2 символа"),
+    email: z.string().email("Моля, въведете валиден имейл адрес"),
+    password: z.string().min(6, "Паролата трябва да съдържа поне 6 символа"),
+    confirmPassword: z.string().min(6, "Паролата трябва да съдържа поне 6 символа"),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
+    message: "Паролите не съвпадат",
     path: ["confirmPassword"],
   })
 
@@ -48,15 +49,15 @@ export default function RegisterPage() {
     try {
       await signUpWithEmail(data.email, data.password, data.name)
       toast({
-        title: "Registration successful",
-        description: "Welcome to Guitar Hub!",
+        title: "Регистрацията успешна",
+        description: "Добре дошли в Guitar Hub!",
       })
       router.push("/")
     } catch (error: any) {
-      console.error("Registration error:", error)
+      console.error("Грешка при регистрация:", error)
       toast({
-        title: "Registration failed",
-        description: error.message || "Failed to create account",
+        title: "Регистрацията неуспешна",
+        description: error.message || "Неуспешно създаване на акаунт",
         variant: "destructive",
       })
     } finally {
@@ -69,15 +70,15 @@ export default function RegisterPage() {
     try {
       await signInWithGoogle()
       toast({
-        title: "Registration successful",
-        description: "Welcome to Guitar Hub!",
+        title: "Регистрацията успешна",
+        description: "Добре дошли в Guitar Hub!",
       })
       router.push("/")
     } catch (error: any) {
-      console.error("Google sign in error:", error)
+      console.error("Грешка при влизане с Google:", error)
       toast({
-        title: "Registration failed",
-        description: error.message || "Failed to sign in with Google",
+        title: "Регистрацията неуспешна",
+        description: error.message || "Неуспешно влизане с Google",
         variant: "destructive",
       })
     } finally {
@@ -89,8 +90,8 @@ export default function RegisterPage() {
     <div className="container flex h-screen items-center justify-center">
       <Card className="mx-auto w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
-          <CardDescription>Enter your information to create an account</CardDescription>
+          <CardTitle className="text-2xl font-bold">Създайте акаунт</CardTitle>
+          <CardDescription>Въведете вашата информация, за да създадете акаунт</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isLoading}>
@@ -112,7 +113,7 @@ export default function RegisterPage() {
                 fill="#EA4335"
               />
             </svg>
-            Sign up with Google
+            Регистрация с Google
           </Button>
 
           <div className="relative">
@@ -120,7 +121,7 @@ export default function RegisterPage() {
               <Separator />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+              <span className="bg-background px-2 text-muted-foreground">Или продължете с</span>
             </div>
           </div>
 
@@ -131,9 +132,9 @@ export default function RegisterPage() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Име</FormLabel>
                     <FormControl>
-                      <Input placeholder="John Doe" {...field} />
+                      <Input placeholder="Иван Петров" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -145,7 +146,7 @@ export default function RegisterPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Имейл</FormLabel>
                     <FormControl>
                       <Input placeholder="name@example.com" {...field} />
                     </FormControl>
@@ -159,7 +160,7 @@ export default function RegisterPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Парола</FormLabel>
                     <FormControl>
                       <Input type="password" {...field} />
                     </FormControl>
@@ -173,7 +174,7 @@ export default function RegisterPage() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel>Потвърдете паролата</FormLabel>
                     <FormControl>
                       <Input type="password" {...field} />
                     </FormControl>
@@ -183,16 +184,16 @@ export default function RegisterPage() {
               />
 
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Creating account..." : "Create account"}
+                {isLoading ? "Създаване на акаунт..." : "Създайте акаунт"}
               </Button>
             </form>
           </Form>
         </CardContent>
         <CardFooter className="flex justify-center">
           <p className="text-sm text-muted-foreground">
-            Already have an account?{" "}
+            Вече имате акаунт?{" "}
             <Link href="/auth/login" className="text-primary hover:underline">
-              Sign in
+              Влезте
             </Link>
           </p>
         </CardFooter>
@@ -200,4 +201,3 @@ export default function RegisterPage() {
     </div>
   )
 }
-

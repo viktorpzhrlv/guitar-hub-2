@@ -34,16 +34,24 @@ export interface CartItem {
   price: number
   image: string
   quantity: number
+  sellerId?: string
+  sellerName?: string
 }
 
 export interface Order {
   id: string
+  customerId: string
   customerName: string
   customerEmail: string
   customerAddress: string
+  customerPhone?: string
   items: CartItem[]
   total: number
-  status: "pending" | "completed"
+  status: "pending" | "processing" | "shipped" | "delivered" | "cancelled"
+  notes?: string
   createdAt: Timestamp
+  updatedAt?: Timestamp
 }
+
+export type OrderStatus = "pending" | "processing" | "shipped" | "delivered" | "cancelled"
 

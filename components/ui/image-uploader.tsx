@@ -52,11 +52,12 @@ export function ImageUploader({
         }
       } catch (err) {
         setError(
-          err instanceof Error ? err.message : "Failed to upload image"
+          err instanceof Error ? err.message : "Неуспешно качване на изображение"
         );
       } finally {
         setIsUploading(false);
         // Reset the input value so the same file can be selected again if needed
+        // Нулиране на стойността на input полето, за да може един и същ файл да бъде избран отново, ако е необходимо
         event.target.value = "";
       }
     },
@@ -79,7 +80,7 @@ export function ImageUploader({
           <div key={`${image}-${index}`} className="relative group">
             <Image
               src={image}
-              alt={`Uploaded image ${index + 1}`}
+              alt={`Качено изображение ${index + 1}`}
               width={100}
               height={100}
               className="object-cover rounded-md border border-gray-200"
@@ -106,12 +107,12 @@ export function ImageUploader({
         />
         <p className="text-sm text-muted-foreground mt-1">
           {multiple 
-            ? "Upload one or more images (JPG, PNG, GIF up to 16MB each)" 
-            : "Upload an image (JPG, PNG, GIF up to 16MB)"}
+            ? "Качете едно или повече изображения (JPG, PNG, GIF до 16MB всяко)"
+            : "Качете изображение (JPG, PNG, GIF до 16MB)"}
         </p>
       </div>
 
-      {isUploading && <p className="text-sm text-amber-500">Uploading...</p>}
+      {isUploading && <p className="text-sm text-amber-500">Качване...</p>}
       {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );

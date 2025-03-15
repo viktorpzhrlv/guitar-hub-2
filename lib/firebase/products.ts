@@ -98,6 +98,28 @@ export async function getPendingProducts(): Promise<Product[]> {
   })) as Product[]
 }
 
+export async function searchProducts(searchTerm: string): Promise<Product[]> {
+  // Get all approved and available products
+  const q = query(productsCollection, where("status", "==", "available"), where("approvalStatus", "==", "approved"))
+
+  const snapshot = await getDocs(q)
+  const products = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Product[]
+
+  // Perform client-side search (Firestore doesn't support full-text search)
+  const normalizedSearchTerm = searchTerm.toLowerCase().trim()
+
+  return products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(normalizedSearchTerm) ||
+      product.description.toLowerCase().includes(normalizedSearchTerm) ||
+      (product.specifications &&
+        Object.values(product.specifications).some((value) => value.toLowerCase().includes(normalizedSearchTerm))),
+  )
+}
+
 export async function createProduct(productData: Omit<Product, "id" | "createdAt" | "updatedAt">) {
   return addDoc(productsCollection, {
     ...productData,
