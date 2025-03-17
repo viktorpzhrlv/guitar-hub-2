@@ -4,8 +4,9 @@ import { useRouter, usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import CategorySearch from "@/components/ui/category-search"
 
 interface ProductFiltersProps {
   categorySlug: string
@@ -13,6 +14,7 @@ interface ProductFiltersProps {
     sort?: string
     minPrice?: string
     maxPrice?: string
+    search?: string
   }
 }
 
@@ -20,20 +22,32 @@ export default function ProductFilters({ categorySlug, searchParams }: ProductFi
   const router = useRouter()
   const pathname = usePathname()
 
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000])
+  // Initialize with default price range
+  const [minPriceInput, setMinPriceInput] = useState<string>("0")
+  const [maxPriceInput, setMaxPriceInput] = useState<string>("")
   const [sort, setSort] = useState<string>(searchParams.sort || "newest")
 
-  // Initialize filters from URL params
-  // Инициализиране на филтрите от URL параметрите
+  // Initialize filters from URL parameters
   useEffect(() => {
-    const minPrice = searchParams.minPrice ? Number.parseInt(searchParams.minPrice) : 0
-    const maxPrice = searchParams.maxPrice ? Number.parseInt(searchParams.maxPrice) : 2000
-    setPriceRange([minPrice, maxPrice])
+    const minPrice = searchParams.minPrice ? searchParams.minPrice : "0"
+    const maxPrice = searchParams.maxPrice ? searchParams.maxPrice : ""
+    setMinPriceInput(minPrice)
+    setMaxPriceInput(maxPrice)
     setSort(searchParams.sort || "newest")
   }, [searchParams])
 
-  // Apply filters
-  // Прилагане на филтрите
+  // Handle manual input changes
+  const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setMinPriceInput(value)
+  }
+  
+  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setMaxPriceInput(value)
+  }
+
+  // Apply all filters
   const applyFilters = () => {
     const params = new URLSearchParams()
 
@@ -41,46 +55,77 @@ export default function ProductFilters({ categorySlug, searchParams }: ProductFi
       params.set("sort", sort)
     }
 
-    if (priceRange[0] > 0) {
-      params.set("minPrice", priceRange[0].toString())
+    const minPrice = parseInt(minPriceInput) || 0
+    if (minPrice > 0) {
+      params.set("minPrice", minPrice.toString())
     }
 
-    if (priceRange[1] < 2000) {
-      params.set("maxPrice", priceRange[1].toString())
+    const maxPrice = parseInt(maxPriceInput)
+    if (!isNaN(maxPrice) && maxPrice > 0) {
+      params.set("maxPrice", maxPrice.toString())
+    }
+
+    // Keep the search parameter if it exists
+    if (searchParams.search) {
+      params.set("search", searchParams.search)
     }
 
     router.push(`${pathname}?${params.toString()}`)
   }
 
-  // Reset filters
-  // Нулиране на филтрите
+  // Reset all filters
   const resetFilters = () => {
-    setPriceRange([0, 2000])
+    setMinPriceInput("0")
+    setMaxPriceInput("")
     setSort("newest")
-    router.push(pathname)
+
+    // Keep only the search parameter if it exists
+    if (searchParams.search) {
+      router.push(`${pathname}?search=${searchParams.search}`)
+    } else {
+      router.push(pathname)
+    }
   }
 
   return (
     <div className="space-y-6">
       <div>
         <h3 className="mb-4 text-lg font-semibold">Филтри</h3>
+
+        {/* Category search component */}
+        <div className="mb-6">
+          <CategorySearch categorySlug={categorySlug} />
+        </div>
+
         <Accordion type="single" collapsible defaultValue="price" className="w-full">
           <AccordionItem value="price">
             <AccordionTrigger>Ценови диапазон</AccordionTrigger>
             <AccordionContent>
               <div className="space-y-4">
-                <Slider
-                  defaultValue={priceRange}
-                  min={0}
-                  max={2000}
-                  step={10}
-                  value={priceRange}
-                  onValueChange={(value) => setPriceRange(value as [number, number])}
-                  className="py-4"
-                />
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">${priceRange[0]}</span>
-                  <span className="text-sm">${priceRange[1]}</span>
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center">
+                    <Input
+                      type="number"
+                      value={minPriceInput}
+                      onChange={handleMinPriceChange}
+                      className="w-24"
+                      min={0}
+                      placeholder="Мин."
+                    />
+                    <span className="ml-1 text-sm">лв.</span>
+                  </div>
+                  <div className="flex-shrink-0">—</div>
+                  <div className="flex items-center">
+                    <Input
+                      type="number"
+                      value={maxPriceInput}
+                      onChange={handleMaxPriceChange}
+                      className="w-24"
+                      min={0}
+                      placeholder="Макс."
+                    />
+                    <span className="ml-1 text-sm">лв.</span>
+                  </div>
                 </div>
               </div>
             </AccordionContent>
@@ -89,13 +134,13 @@ export default function ProductFilters({ categorySlug, searchParams }: ProductFi
       </div>
 
       <div>
-        <h3 className="mb-2 text-sm font-medium">Сортирай по</h3>
+        <h3 className="mb-2 text-sm font-medium">Сортиране по</h3>
         <Select value={sort} onValueChange={setSort}>
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Сортирай по" />
+            <SelectValue placeholder="Сортиране по" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="newest">Най-новите</SelectItem>
+            <SelectItem value="newest">Най-нови</SelectItem>
             <SelectItem value="price-asc">Цена: Ниска към висока</SelectItem>
             <SelectItem value="price-desc">Цена: Висока към ниска</SelectItem>
           </SelectContent>
@@ -103,7 +148,7 @@ export default function ProductFilters({ categorySlug, searchParams }: ProductFi
       </div>
 
       <div className="flex flex-col gap-2">
-        <Button onClick={applyFilters}>Приложи филтри</Button>
+        <Button onClick={applyFilters}>Приложи филтрите</Button>
         <Button variant="outline" onClick={resetFilters}>
           Нулирай филтрите
         </Button>
@@ -111,3 +156,4 @@ export default function ProductFilters({ categorySlug, searchParams }: ProductFi
     </div>
   )
 }
+

@@ -1,9 +1,16 @@
+"use client"
+
 import { notFound } from "next/navigation"
 import { getProductById } from "@/lib/firebase/products"
 import { getCategoryById } from "@/lib/firebase/categories"
 import { serializeData } from "@/lib/utils"
 import AddToCartButton from "@/components/ui/add-to-cart-button"
 import ProductGallery from "@/components/ui/product-gallery"
+import { useAuth } from "@/lib/auth-context"
+import { isAdmin } from "@/lib/firebase/auth"
+import { Edit } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 interface ProductPageProps {
   params: {
@@ -13,38 +20,37 @@ interface ProductPageProps {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const productData = await getProductById(params.id)
-  
+
   if (!productData || productData.status !== "available") {
     notFound()
   }
-  
-  // Serialize the product data to handle Timestamp objects
+
+  // Сериализиране на данните за продукта за обработка на Timestamp обекти
   const product = serializeData(productData)
-  
+
   const categoryData = await getCategoryById(product.category)
   const category = categoryData ? serializeData(categoryData) : null
-  
+
+  const { user } = useAuth()
+
   return (
     <div className="container mx-auto px-4 py-8 md:px-6 lg:px-8">
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        {/* Product Gallery */}
-        {/* Продуктова Галерия */}
+        {/* Галерия на продукта */}
         <ProductGallery images={product.images} />
-        {/* Product Info */}
-        {/* Информация за Продукта */}
+        {/* Информация за продукта */}
         <div className="flex flex-col">
           <h1 className="text-3xl font-bold">{product.name}</h1>
           <div className="mt-2">
-            <p className="text-xl font-bold">${product.price.toFixed(2)}</p>
+            <p className="text-xl font-bold">{product.price.toFixed(2)} лв.</p>
           </div>
           <div className="mt-4">
-            <p className="text-sm text-muted-foreground">Категория: {category?.name || "Unknown"}</p>
+            <p className="text-sm text-muted-foreground">Категория: {category?.name || "Неизвестна"}</p>
           </div>
           <div className="mt-6 border-t pt-6">
             <h2 className="text-lg font-semibold">Описание</h2>
             <p className="mt-2 text-muted-foreground">{product.description}</p>
           </div>
-          {/* Specifications */}
           {/* Спецификации */}
           {product.specifications && Object.keys(product.specifications).length > 0 && (
             <div className="mt-6 border-t pt-6">
@@ -59,10 +65,20 @@ export default async function ProductPage({ params }: ProductPageProps) {
               </dl>
             </div>
           )}
-          {/* Add to Cart */}
-          {/* Добави в Количката */}
+          {/* Бутон за редактиране за администратори */}
+          {isAdmin(user) && (
+            <Button variant="outline" asChild className="mb-2 w-full">
+              <Link href={`/admin/products/${product.id}/edit`}>
+                <Edit className="mr-2 h-4 w-4" />
+                Редактирай продукта
+              </Link>
+            </Button>
+          )}
+          {/* Добавяне в кошницата */}
           <div className="mt-8">
-            <p className="mb-2 text-sm text-muted-foreground">Забележка: Това е уникален продукт. Само един на клиент.</p>
+            <p className="mb-2 text-sm text-muted-foreground">
+              Забележка: Това е уникален артикул. Само един на клиент.
+            </p>
             <AddToCartButton product={product} />
           </div>
         </div>
@@ -70,3 +86,4 @@ export default async function ProductPage({ params }: ProductPageProps) {
     </div>
   )
 }
+

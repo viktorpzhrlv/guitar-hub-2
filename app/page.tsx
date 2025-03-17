@@ -15,7 +15,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative h-[500px] w-full overflow-hidden">
         <div className="absolute inset-0 bg-black/60 z-10" />
-        <Image src="/images/hero-guitar.jpg" alt="Electric guitar" fill priority className="object-cover" />
+        <Image src="https://i.ibb.co/qFctrwVj/image.png" alt="Electric guitar" fill priority className="object-cover" />
         <div className="container relative z-20 flex h-full flex-col items-center justify-center text-center text-white">
           <h1 className="mb-4 text-4xl font-bold md:text-5xl lg:text-6xl">Открийте Перфектния си Звук</h1>
           <p className="mb-6 max-w-2xl text-lg">

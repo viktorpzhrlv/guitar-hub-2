@@ -233,12 +233,7 @@ export default function AdminProductsPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem asChild>
-                          <Link href={`/admin/products/${product.id}`}>
-                            <Pencil className="mr-2 h-4 w-4" />
-                            Редактиране
-                          </Link>
-                        </DropdownMenuItem>
+                      
                         <DropdownMenuItem
                           onClick={() => setProductToDelete(product.id)}
                           className="text-destructive focus:text-destructive"

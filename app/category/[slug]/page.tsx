@@ -14,10 +14,10 @@ interface CategoryPageProps {
     sort?: string
     minPrice?: string
     maxPrice?: string
+    search?: string
   }
 }
 
-// CategoryPage е основният компонент на страницата, който показва продуктите в дадена категория.
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
   const category = await getCategoryBySlug(params.slug)
 
@@ -43,7 +43,6 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   )
 }
 
-// ProductGrid показва списък с продукти, филтрирани и сортирани според параметрите на търсене.
 async function ProductGrid({
   categoryId,
   searchParams,
@@ -53,6 +52,7 @@ async function ProductGrid({
     sort?: string
     minPrice?: string
     maxPrice?: string
+    search?: string
   }
 }) {
   const products = await getProductsByCategory(categoryId)
@@ -62,10 +62,24 @@ async function ProductGrid({
 
   // Филтриране по цена
   if (searchParams.minPrice || searchParams.maxPrice) {
-    const minPrice = searchParams.minPrice ? Number.parseFloat(searchParams.minPrice) : 0
-    const maxPrice = searchParams.maxPrice ? Number.parseFloat(searchParams.maxPrice) : Number.POSITIVE_INFINITY
+    const minPrice = searchParams.minPrice ? parseFloat(searchParams.minPrice) : 0
+    const maxPrice = searchParams.maxPrice ? parseFloat(searchParams.maxPrice) : Number.POSITIVE_INFINITY
 
-    filteredProducts = filteredProducts.filter((product) => product.price >= minPrice && product.price <= maxPrice)
+    filteredProducts = filteredProducts.filter((product) => 
+      product.price >= minPrice && product.price <= maxPrice
+    )
+  }
+
+  // Филтриране по търсене
+  if (searchParams.search) {
+    const searchQuery = searchParams.search.toLowerCase()
+    filteredProducts = filteredProducts.filter(
+      (product) =>
+        product.name.toLowerCase().includes(searchQuery) ||
+        product.description.toLowerCase().includes(searchQuery) ||
+        (product.specifications &&
+          Object.values(product.specifications).some((value) => value.toLowerCase().includes(searchQuery))),
+    )
   }
 
   // Прилагане на сортиране
@@ -81,11 +95,11 @@ async function ProductGrid({
         filteredProducts.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds)
         break
       default:
-        // Сортиране по подразбиране: най-новите
+        // Сортиране по подразбиране - най-нови
         filteredProducts.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds)
     }
   } else {
-    // Сортиране по подразбиране: най-новите
+    // Сортиране по подразбиране - най-нови
     filteredProducts.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds)
   }
 
@@ -93,7 +107,9 @@ async function ProductGrid({
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <h2 className="text-xl font-semibold">Не са намерени продукти</h2>
-        <p className="mt-2 text-muted-foreground">Опитайте да коригирате филтрите си или проверете по-късно за нови продукти.</p>
+        <p className="mt-2 text-muted-foreground">
+          Опитайте да промените филтрите или проверете по-късно за нови продукти.
+        </p>
       </div>
     )
   }
@@ -107,7 +123,6 @@ async function ProductGrid({
   )
 }
 
-// ProductSkeleton е компонент, който показва скелетна структура, докато продуктите се зареждат.
 function ProductSkeleton() {
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -122,3 +137,4 @@ function ProductSkeleton() {
     </div>
   )
 }
+

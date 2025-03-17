@@ -40,11 +40,11 @@ export default function Header() {
 
   return (
     <header className="bg-background sticky top-0 z-40 w-full border-b">
-      <nav className="container mx-auto flex items-center justify-between p-4 lg:px-8" aria-label="Global">
+      <nav className="container mx-auto flex items-center justify-between p-4 lg:px-8" aria-label="Глобална">
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5 flex items-center gap-2">
             <Guitar className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold">Guitar Hub</span>
+            <span className="text-xl font-bold">Китара Хъб</span>
           </Link>
         </div>
         <div className="flex lg:hidden">
@@ -57,8 +57,8 @@ export default function Header() {
             <Menu className="h-6 w-6" aria-hidden="true" />
           </Button>
         </div>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-4">
-          <form onSubmit={handleSearch} className="relative w-full max-w-md">
+        <div className="hidden lg:flex lg:flex-1 lg:items-center lg:gap-4">
+          <form onSubmit={handleSearch} className="relative flex-1 max-w-xl mr-4">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
@@ -90,8 +90,8 @@ export default function Header() {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
                   <Avatar>
-                    <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "User"} />
-                    <AvatarFallback>{user.displayName ? user.displayName.charAt(0).toUpperCase() : "U"}</AvatarFallback>
+                    <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "Потребител"} />
+                    <AvatarFallback>{user.displayName ? user.displayName.charAt(0).toUpperCase() : "П"}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
@@ -106,7 +106,7 @@ export default function Header() {
                 <DropdownMenuItem asChild>
                   <Link href="/seller" className="flex items-center">
                     <ShoppingBag className="mr-2 h-4 w-4" />
-                    Панел за продавачи
+                    Табло на продавача
                   </Link>
                 </DropdownMenuItem>
 
@@ -121,7 +121,7 @@ export default function Header() {
                   <DropdownMenuItem asChild>
                     <Link href="/admin/products" className="flex items-center">
                       <Settings className="mr-2 h-4 w-4" />
-                      Административен панел
+                      Админ панел
                     </Link>
                   </DropdownMenuItem>
                 )}
@@ -142,17 +142,17 @@ export default function Header() {
         </div>
       </nav>
 
-      {/* Mobile menu */}
+      {/* Мобилно меню */}
       <div className={`lg:hidden ${mobileMenuOpen ? "fixed inset-0 z-50" : "hidden"}`}>
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" onClick={() => setMobileMenuOpen(false)} />
         <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-background px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <Link href="/" className="-m-1.5 p-1.5 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
               <Guitar className="h-8 w-8 text-primary" />
-              <span className="text-xl font-bold">Guitar Hub</span>
+              <span className="text-xl font-bold">Китара Хъб</span>
             </Link>
             <Button variant="ghost" className="-m-2.5 rounded-md p-2.5" onClick={() => setMobileMenuOpen(false)}>
-              <span className="sr-only">Затвори менюто</span>
+              <span className="sr-only">Затвори меню</span>
               <X className="h-6 w-6" aria-hidden="true" />
             </Button>
           </div>
@@ -174,7 +174,7 @@ export default function Header() {
                   <SheetTrigger asChild>
                     <Button className="w-full mb-4">
                       <ShoppingCart className="mr-2 h-5 w-5" />
-                      Виж количката
+                      Виж кошницата
                       {totalItems > 0 && (
                         <span className="ml-2 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs text-primary">
                           {totalItems}
@@ -191,9 +191,9 @@ export default function Header() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-4 py-2">
                       <Avatar>
-                        <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "User"} />
+                        <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "Потребител"} />
                         <AvatarFallback>
-                          {user.displayName ? user.displayName.charAt(0).toUpperCase() : "U"}
+                          {user.displayName ? user.displayName.charAt(0).toUpperCase() : "П"}
                         </AvatarFallback>
                       </Avatar>
                       <div>
@@ -215,7 +215,7 @@ export default function Header() {
                       className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-muted"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Панел за продавачи
+                      Табло на продавача
                     </Link>
 
                     <Link
@@ -232,7 +232,7 @@ export default function Header() {
                         className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-muted"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        Административен панел
+                        Админ панел
                       </Link>
                     )}
 
@@ -277,15 +277,15 @@ function CartSheet() {
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between border-b pb-4">
-        <h2 className="text-lg font-semibold">Количка за пазаруване</h2>
+        <h2 className="text-lg font-semibold">Кошница</h2>
         <ShoppingCart className="h-5 w-5" />
       </div>
 
       {items.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center">
           <ShoppingCart className="h-16 w-16 text-muted-foreground mb-4" />
-          <p className="text-lg font-medium">Вашата количка е празна</p>
-          <p className="text-sm text-muted-foreground mt-1">Добавете продукти към вашата количка</p>
+          <p className="text-lg font-medium">Вашата кошница е празна</p>
+          <p className="text-sm text-muted-foreground mt-1">Добавете продукти във вашата кошница</p>
         </div>
       ) : (
         <>
@@ -306,7 +306,7 @@ function CartSheet() {
                     <div>
                       <div className="flex justify-between text-base font-medium">
                         <h3>{item.name}</h3>
-                        <p className="ml-4">${item.price.toFixed(2)}</p>
+                        <p className="ml-4">{item.price.toFixed(2)} лв.</p>
                       </div>
                     </div>
                     <div className="flex flex-1 items-end justify-end text-sm">
@@ -326,7 +326,7 @@ function CartSheet() {
           <div className="border-t pt-4">
             <div className="flex justify-between text-base font-medium">
               <p>Междинна сума</p>
-              <p>${totalPrice.toFixed(2)}</p>
+              <p>{totalPrice.toFixed(2)} лв.</p>
             </div>
             <p className="mt-0.5 text-sm text-muted-foreground">Доставката и данъците се изчисляват при плащане.</p>
             <div className="mt-4">
@@ -338,7 +338,7 @@ function CartSheet() {
               <p>
                 или{" "}
                 <Link href="/cart" className="font-medium text-primary hover:text-primary/80">
-                  Виж количката
+                  Виж кошницата
                 </Link>
               </p>
             </div>
@@ -348,3 +348,4 @@ function CartSheet() {
     </div>
   )
 }
+
