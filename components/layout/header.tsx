@@ -44,7 +44,7 @@ export default function Header() {
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5 flex items-center gap-2">
             <Guitar className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold">Китара Хъб</span>
+            <span className="text-xl font-bold">Guitar Hub</span>
           </Link>
         </div>
         <div className="flex lg:hidden">
