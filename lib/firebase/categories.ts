@@ -43,6 +43,7 @@ export async function getCategoryById(id: string): Promise<Category | null> {
 }
 
 export async function getCategoryBySlug(slug: string): Promise<Category | null> {
+  unstable_noStore();
   const q = query(categoriesCollection, where("slug", "==", slug))
 
   const snapshot = await getDocs(q)

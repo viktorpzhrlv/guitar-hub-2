@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore"
 import { db } from "./config"
 import type { CartItem, Order, OrderStatus } from "@/lib/types"
+import { unstable_noStore } from 'next/cache';
 
 const ordersCollection = collection(db, "orders")
 
@@ -36,6 +37,7 @@ export async function createOrder(orderData: OrderData) {
 }
 
 export async function getOrderById(id: string): Promise<Order | null> {
+  unstable_noStore();
   const docRef = doc(db, "orders", id)
   const docSnap = await getDoc(docRef)
 
@@ -50,6 +52,7 @@ export async function getOrderById(id: string): Promise<Order | null> {
 }
 
 export async function getOrdersByCustomer(customerId: string): Promise<Order[]> {
+  unstable_noStore();
   const q = query(ordersCollection, where("customerId", "==", customerId), orderBy("createdAt", "desc"))
 
   const snapshot = await getDocs(q)
@@ -60,6 +63,7 @@ export async function getOrdersByCustomer(customerId: string): Promise<Order[]> 
 }
 
 export async function getOrdersBySeller(sellerId: string): Promise<Order[]> {
+  unstable_noStore();
   // This query is more complex because we need to find orders that contain items from this seller
   // First, get all orders
   const q = query(ordersCollection, orderBy("createdAt", "desc"))
@@ -75,6 +79,7 @@ export async function getOrdersBySeller(sellerId: string): Promise<Order[]> {
 }
 
 export async function getAllOrders(): Promise<Order[]> {
+  unstable_noStore();
   const q = query(ordersCollection, orderBy("createdAt", "desc"))
   const snapshot = await getDocs(q)
 

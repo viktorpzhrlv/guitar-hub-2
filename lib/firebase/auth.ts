@@ -11,6 +11,7 @@ import {
 } from "firebase/auth"
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore"
 import { app, db } from "./config"
+import { unstable_noStore } from 'next/cache';
 
 export const auth = getAuth(app)
 const googleProvider = new GoogleAuthProvider()
@@ -84,6 +85,7 @@ export const createUserDocument = async (user: FirebaseUser, additionalData?: an
 
 // Get user document with role
 export const getUserWithRole = async (user: FirebaseUser): Promise<User | null> => {
+  unstable_noStore();
   if (!user) return null
 
   try {
