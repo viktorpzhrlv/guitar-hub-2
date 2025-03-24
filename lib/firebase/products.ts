@@ -14,10 +14,12 @@ import {
 } from "firebase/firestore"
 import { db, revalidatePath } from "./config"
 import type { Product } from "@/lib/types"
+import { unstable_noStore } from 'next/cache';
 
 const productsCollection = collection(db, "products")
 
 export async function getProducts(): Promise<Product[]> {
+  unstable_noStore();
   const q = query(
     productsCollection,
     where("status", "==", "available"),
@@ -33,6 +35,7 @@ export async function getProducts(): Promise<Product[]> {
 }
 
 export async function getFeaturedProducts(count = 8): Promise<Product[]> {
+  unstable_noStore();
   const q = query(
     productsCollection,
     where("status", "==", "available"),
@@ -65,6 +68,7 @@ export async function getProductsByCategory(category: string): Promise<Product[]
 }
 
 export async function getProductById(id: string): Promise<Product | null> {
+  unstable_noStore();
   const docRef = doc(db, "products", id)
   const docSnap = await getDoc(docRef)
 
