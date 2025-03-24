@@ -12,7 +12,7 @@ import {
   deleteDoc,
   serverTimestamp,
 } from "firebase/firestore"
-import { db } from "./config"
+import { db, revalidatePath } from "./config"
 import type { Product } from "@/lib/types"
 
 const productsCollection = collection(db, "products")
@@ -121,41 +121,90 @@ export async function searchProducts(searchTerm: string): Promise<Product[]> {
 }
 
 export async function createProduct(productData: Omit<Product, "id" | "createdAt" | "updatedAt">) {
-  return addDoc(productsCollection, {
+  const result = await addDoc(productsCollection, {
     ...productData,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   })
+  
+  // Revalidate paths
+  await revalidatePath('/admin/products')
+  await revalidatePath('/')
+  if (productData.category) {
+    await revalidatePath(`/category/${productData.category}`)
+  }
+  
+  return result
 }
 
 export async function updateProduct(id: string, productData: Partial<Omit<Product, "id" | "createdAt" | "updatedAt">>) {
   const docRef = doc(db, "products", id)
-  return updateDoc(docRef, {
+  const result = await updateDoc(docRef, {
     ...productData,
     updatedAt: serverTimestamp(),
   })
+  
+  // Revalidate paths
+  await revalidatePath('/admin/products')
+  await revalidatePath(`/product/${id}`)
+  await revalidatePath('/')
+  if (productData.category) {
+    await revalidatePath(`/category/${productData.category}`)
+  }
+  
+  return result
 }
 
 export async function approveProduct(id: string, adminNotes?: string) {
   const docRef = doc(db, "products", id)
-  return updateDoc(docRef, {
+  const product = await getProductById(id)
+  
+  const result = await updateDoc(docRef, {
     approvalStatus: "approved",
     adminNotes: adminNotes || "",
     updatedAt: serverTimestamp(),
   })
+  
+  // Revalidate paths
+  await revalidatePath('/admin/approvals')
+  await revalidatePath('/admin/products')
+  await revalidatePath(`/product/${id}`)
+  await revalidatePath('/')
+  if (product?.category) {
+    await revalidatePath(`/category/${product.category}`)
+  }
+  
+  return result
 }
 
 export async function rejectProduct(id: string, adminNotes?: string) {
   const docRef = doc(db, "products", id)
-  return updateDoc(docRef, {
+  const result = await updateDoc(docRef, {
     approvalStatus: "rejected",
     adminNotes: adminNotes || "",
     updatedAt: serverTimestamp(),
   })
+  
+  // Revalidate paths
+  await revalidatePath('/admin/approvals')
+  await revalidatePath('/admin/products')
+  await revalidatePath(`/product/${id}`)
+  
+  return result
 }
 
 export async function deleteProduct(id: string) {
   const docRef = doc(db, "products", id)
-  return deleteDoc(docRef)
+  const product = await getProductById(id)
+  const result = await deleteDoc(docRef)
+  
+  // Revalidate paths
+  await revalidatePath('/admin/products')
+  await revalidatePath('/')
+  if (product?.category) {
+    await revalidatePath(`/category/${product.category}`)
+  }
+  
+  return result
 }
 

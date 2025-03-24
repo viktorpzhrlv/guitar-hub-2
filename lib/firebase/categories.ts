@@ -11,7 +11,7 @@ import {
   serverTimestamp,
   where,
 } from "firebase/firestore"
-import { db } from "./config"
+import { db, revalidatePath } from "./config"
 import type { Category } from "@/lib/types"
 
 const categoriesCollection = collection(db, "categories")
@@ -56,11 +56,17 @@ export async function getCategoryBySlug(slug: string): Promise<Category | null> 
 }
 
 export async function createCategory(categoryData: Omit<Category, "id" | "createdAt" | "updatedAt">) {
-  return addDoc(categoriesCollection, {
+  const result = await addDoc(categoriesCollection, {
     ...categoryData,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   })
+  
+  // Revalidate paths that might show categories
+  await revalidatePath('/admin/categories');
+  await revalidatePath('/');
+  
+  return result;
 }
 
 export async function updateCategory(
@@ -68,14 +74,33 @@ export async function updateCategory(
   categoryData: Partial<Omit<Category, "id" | "createdAt" | "updatedAt">>,
 ) {
   const docRef = doc(db, "categories", id)
-  return updateDoc(docRef, {
+  const result = await updateDoc(docRef, {
     ...categoryData,
     updatedAt: serverTimestamp(),
   })
+  
+  // Revalidate paths that might show categories
+  await revalidatePath('/admin/categories');
+  await revalidatePath('/');
+  if (categoryData.slug) {
+    await revalidatePath(`/category/${categoryData.slug}`);
+  }
+  
+  return result;
 }
 
 export async function deleteCategory(id: string) {
   const docRef = doc(db, "categories", id)
-  return deleteDoc(docRef)
+  const category = await getCategoryById(id);
+  const result = await deleteDoc(docRef)
+  
+  // Revalidate paths
+  await revalidatePath('/admin/categories');
+  await revalidatePath('/');
+  if (category?.slug) {
+    await revalidatePath(`/category/${category.slug}`);
+  }
+  
+  return result;
 }
 

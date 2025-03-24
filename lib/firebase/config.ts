@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from "firebase/app"
-import { getFirestore } from "firebase/firestore"
+import { getFirestore, FirestoreSettings } from "firebase/firestore"
 import { getStorage } from "firebase/storage"
 
 const firebaseConfig = {
@@ -15,6 +15,22 @@ const firebaseConfig = {
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
 const db = getFirestore(app)
 const storage = getStorage(app)
+
+// Function to help revalidate paths in production
+export const revalidatePath = async (path: string) => {
+  // Only run in production
+  if (process.env.NODE_ENV === 'production') {
+    try {
+      // Attempt to revalidate the path using Next.js API
+      await fetch(`/api/revalidate?path=${path}`, {
+        method: 'POST',
+      });
+      console.log(`Revalidated path: ${path}`);
+    } catch (error) {
+      console.error(`Failed to revalidate path: ${path}`, error);
+    }
+  }
+};
 
 export { app, db, storage }
 
