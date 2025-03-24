@@ -11,9 +11,8 @@ export default function CheckoutSuccessPage() {
         <CheckCircle className="h-12 w-12 text-primary" />
       </div>
       <h1 className="mt-6 text-3xl font-bold">Поръчката е направена успешно!</h1>
-      {/* Благодарим ви за вашата покупка. Получихме вашата поръчка и ще я обработим веднага. Ще получите имейл за потвърждение скоро. */}
       <p className="mt-4 max-w-md text-muted-foreground">
-        Благодарим ви за вашата покупка. Получихме вашата поръчка и ще я обработим веднага. Ще получите имейл за потвърждение скоро.
+        Благодарим ви за вашата покупка. Получихме вашата поръчка и ще я обработим веднага.
       </p>
       <div className="mt-8 flex gap-4">
         <Button asChild>
@@ -21,7 +20,7 @@ export default function CheckoutSuccessPage() {
         </Button>
         {/* Свържете се с поддръжката */}
         <Button asChild variant="outline">
-          <Link href="/contact">Свържете се с поддръжката</Link>
+          <Link href="/contact">Свържете се с поддръжка</Link>
         </Button>
       </div>
     </div>

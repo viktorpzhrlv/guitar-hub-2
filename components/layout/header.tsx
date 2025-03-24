@@ -10,7 +10,7 @@ import { usePathname } from "next/navigation"
 import { ShoppingCart, Menu, X, Guitar, Search, User, LogOut, Settings, ShoppingBag } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -276,10 +276,9 @@ function CartSheet() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b pb-4">
-        <h2 className="text-lg font-semibold">Кошница</h2>
-        <ShoppingCart className="h-5 w-5" />
-      </div>
+      <SheetHeader className="border-b pb-4 text-left">
+        <SheetTitle>Кошница</SheetTitle>
+      </SheetHeader>
 
       {items.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center">

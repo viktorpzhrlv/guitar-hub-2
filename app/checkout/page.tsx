@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -14,6 +14,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { useCart } from "@/lib/cart-context"
 import { useAuth } from "@/lib/auth-context"
 import { createOrder } from "@/lib/firebase/orders"
+import { updateProduct } from "@/lib/firebase/products"
+import { useToast } from "@/components/ui/use-toast"
 
 const checkoutSchema = z.object({
   name: z.string().min(2, "Името трябва да съдържа поне 2 символа"),
@@ -21,7 +23,7 @@ const checkoutSchema = z.object({
   address: z.string().min(5, "Адресът трябва да съдържа поне 5 символа"),
   city: z.string().min(2, "Градът трябва да съдържа поне 2 символа"),
   state: z.string().min(2, "Щатът трябва да съдържа поне 2 символа"),
-  zipCode: z.string().min(5, "Пощенският код трябва да съдържа поне 5 символа"),
+  zipCode: z.string().min(4, "Пощенският код трябва да съдържа поне 4 символа"),
   phone: z.string().min(10, "Телефонният номер трябва да съдържа поне 10 символа"),
   notes: z.string().optional(),
 })
@@ -32,13 +34,14 @@ export default function CheckoutPage() {
   const router = useRouter()
   const { items, totalPrice, clearCart } = useCart()
   const { user } = useAuth()
+  const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
-      name: user?.displayName || "",
-      email: user?.email || "",
+      name: "",
+      email: "",
       address: "",
       city: "",
       state: "",
@@ -48,16 +51,35 @@ export default function CheckoutPage() {
     },
   })
 
-  // Актуализиране на формата при зареждане на потребителските данни
-  useState(() => {
+  // Check for empty cart and redirect
+  useEffect(() => {
+    if (items.length === 0) {
+      router.push("/cart")
+    }
+  }, [items.length, router])
+
+  // Check if user is trying to buy their own item
+  useEffect(() => {
+    if (user && items.some(item => item.sellerId === user.uid)) {
+      toast({
+        title: "Невъзможна покупка",
+        description: "Не можете да закупите собствените си артикули",
+        variant: "destructive",
+      })
+      router.push("/cart")
+    }
+  }, [items, user, router, toast])
+
+  // Update form when user data is available
+  useEffect(() => {
     if (user) {
       form.setValue("name", user.displayName || "")
       form.setValue("email", user.email || "")
     }
-  })
+  }, [user, form])
 
-  if (items.length === 0) {
-    router.push("/cart")
+  // Don't render anything while redirecting for empty cart or seller's own items
+  if (items.length === 0 || (user && items.some(item => item.sellerId === user.uid))) {
     return null
   }
 
@@ -65,7 +87,7 @@ export default function CheckoutPage() {
     setIsSubmitting(true)
 
     try {
-      // Създаване на поръчка във Firestore
+      // Create order
       const order = {
         customerId: user?.uid || "guest",
         customerName: data.name,
@@ -80,11 +102,24 @@ export default function CheckoutPage() {
 
       await createOrder(order)
 
-      // Изчистване на количката и пренасочване към страницата за успешни поръчки
+      // Update product status for each ordered item
+      for (const item of items) {
+        await updateProduct(item.productId, {
+          status: "unavailable"
+        })
+      }
+
+      // First clear the cart
       clearCart()
+      // Then navigate to success page
       router.push("/checkout/success")
     } catch (error) {
       console.error("Грешка при създаване на поръчка:", error)
+      toast({
+        title: "Грешка",
+        description: "Възникна проблем при създаването на поръчката. Моля, опитайте отново.",
+        variant: "destructive",
+      })
       setIsSubmitting(false)
     }
   }
@@ -175,7 +210,7 @@ export default function CheckoutPage() {
                   name="state"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Щат / Област</FormLabel>
+                      <FormLabel>Област</FormLabel>
                       <FormControl>
                         <Input placeholder="София-град" {...field} />
                       </FormControl>
@@ -264,11 +299,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Доставка</span>
-                  <span>Безплатна</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Такса</span>
-                  <span>$0.00</span>
+                  <span>Според куриера</span>
                 </div>
                 <div className="border-t pt-2">
                   <div className="flex justify-between font-medium">
@@ -278,13 +309,6 @@ export default function CheckoutPage() {
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="mt-6 rounded-lg border p-4">
-            <h3 className="text-sm font-medium">Метод на плащане</h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              За тази демонстрация не се обработват реални плащания. Натиснете "Потвърди поръчката", за да симулирате покупка.
-            </p>
           </div>
         </div>
       </div>
