@@ -13,10 +13,12 @@ import {
 } from "firebase/firestore"
 import { db } from "./config"
 import type { Category } from "@/lib/types"
+import { unstable_noStore } from 'next/cache';
 
 const categoriesCollection = collection(db, "categories")
 
 export async function getCategories(): Promise<Category[]> {
+  unstable_noStore(); // Disable caching for this data fetch
   const q = query(categoriesCollection, orderBy("name", "asc"))
 
   const snapshot = await getDocs(q)

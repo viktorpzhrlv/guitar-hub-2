@@ -1,6 +1,7 @@
 import { Suspense } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { headers } from 'next/headers'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -9,7 +10,13 @@ import { getCategories } from "@/lib/firebase/categories"
 import ProductCard from "@/components/ui/product-card"
 import CategoryCard from "@/components/ui/category-card"
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default function Home() {
+  // Force dynamic rendering and prevent caching
+  headers();
+
   return (
     <div className="flex flex-col gap-12 pb-8">
       {/* Hero Section */}
