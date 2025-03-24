@@ -16,11 +16,12 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  experimental: {
-    webpackBuildWorker: true,
-    parallelServerBuildTraces: true,
-    parallelServerCompiles: true,
-  },
+  
+  // Transpile Firebase packages
+  transpilePackages: ["firebase", "firebase-admin"],
+  
+  // Set default revalidate time to 0 (dynamic) for all pages
+  staticPageGenerationTimeout: 1000,
 }
 
 mergeConfig(nextConfig, userConfig)
