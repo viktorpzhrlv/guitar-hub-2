@@ -12,6 +12,7 @@ export default function TermsOfServicePage() {
       
       <div className="prose prose-slate max-w-none">
         <p>Последна актуализация: 26 март 2025 г.</p>
+        
 
         <h2 className="mt-8 text-2xl font-semibold">1. Въведение</h2>
         <p>
