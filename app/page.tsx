@@ -28,14 +28,7 @@ export default function Home() {
           <p className="mb-6 max-w-2xl text-lg">
             Открийте премиум китари, усилватели, ефекти педали и аксесоари за музиканти от всички нива.
           </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Button asChild size="lg">
-              <Link href="/category/electric">Пазарувай Електрически</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="bg-transparent text-white hover:text-black">
-              <Link href="/category/acoustic">Пазарувай Акустични</Link>
-            </Button>
-          </div>
+         
         </div>
       </section>
 
