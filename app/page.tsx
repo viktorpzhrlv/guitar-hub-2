@@ -135,7 +135,7 @@ async function CategoriesGrid() {
   const categories = await getCategories()
 
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
       {categories.map((category) => (
         <CategoryCard key={category.id} category={category} />
       ))}
@@ -145,8 +145,8 @@ async function CategoriesGrid() {
 
 function CategorySkeleton() {
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {Array.from({ length: 4 }).map((_, i) => (
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+      {Array.from({ length: 6 }).map((_, i) => (
         <div key={i} className="flex flex-col gap-2">
           <Skeleton className="aspect-square w-full rounded-lg" />
           <Skeleton className="h-6 w-24" />

@@ -57,27 +57,18 @@ export default function CategorySearch({ categorySlug }: CategorySearchProps) {
 
   return (
     <div className="mb-4">
-      <form onSubmit={handleSearch} className="relative">
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-        <Input
-          type="search"
-          placeholder="Търсене в тази категория..."
-          className="w-full pl-8 pr-16"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        {searchQuery && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="absolute right-10 top-0 h-9 w-9"
-            onClick={handleClear}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        )}
-        <Button type="submit" size="sm" className="absolute right-0 top-0 h-9">
+      <form onSubmit={handleSearch} className="flex flex-col gap-2">
+        <div className="relative w-full">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Търсене в тази категория..."
+            className="w-full pl-8"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <Button type="submit" className="w-full">
           Търси
         </Button>
       </form>

@@ -22,7 +22,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
         />
         <div className="absolute inset-0 bg-black/40 transition-opacity group-hover:bg-black/50" />
         <div className="absolute inset-0 flex items-center justify-center">
-          <h3 className="text-xl font-bold text-white">{category.name}</h3>
+          <h3 className="text-xl font-bold text-center text-white">{category.name}</h3>
         </div>
       </div>
     </Link>

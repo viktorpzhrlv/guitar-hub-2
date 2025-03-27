@@ -70,6 +70,7 @@ export default function ProductFilters({ categorySlug, searchParams }: ProductFi
       params.set("search", searchParams.search)
     }
 
+    // Use router navigation to trigger data refetching
     router.push(`${pathname}?${params.toString()}`)
   }
 
@@ -102,29 +103,34 @@ export default function ProductFilters({ categorySlug, searchParams }: ProductFi
             <AccordionTrigger>Ценови диапазон</AccordionTrigger>
             <AccordionContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex flex-col gap-3">
                   <div className="flex items-center">
-                    <Input
-                      type="number"
-                      value={minPriceInput}
-                      onChange={handleMinPriceChange}
-                      className="w-24"
-                      min={0}
-                      placeholder="Мин."
-                    />
-                    <span className="ml-1 text-sm">лв.</span>
+                    <span className="min-w-16 text-sm">Минимална:</span>
+                    <div className="flex items-center">
+                      <Input
+                        type="number"
+                        value={minPriceInput}
+                        onChange={handleMinPriceChange}
+                        className="w-28"
+                        min={0}
+                        placeholder="Мин."
+                      />
+                      <span className="ml-1 text-sm">лв.</span>
+                    </div>
                   </div>
-                  <div className="flex-shrink-0">—</div>
                   <div className="flex items-center">
-                    <Input
-                      type="number"
-                      value={maxPriceInput}
-                      onChange={handleMaxPriceChange}
-                      className="w-24"
-                      min={0}
-                      placeholder="Макс."
-                    />
-                    <span className="ml-1 text-sm">лв.</span>
+                    <span className="min-w-16 text-sm">Максимална:</span>
+                    <div className="flex items-center">
+                      <Input
+                        type="number"
+                        value={maxPriceInput}
+                        onChange={handleMaxPriceChange}
+                        className="w-28"
+                        min={0}
+                        placeholder="Макс."
+                      />
+                      <span className="ml-1 text-sm">лв.</span>
+                    </div>
                   </div>
                 </div>
               </div>

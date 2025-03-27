@@ -20,7 +20,6 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
       <div className="flex flex-1 flex-col p-4">
         <h3 className="text-sm font-medium">{product.name}</h3>
-        <p className="mt-1 text-sm text-muted-foreground">{product.category}</p>
         <div className="mt-auto pt-4">
           <p className="text-lg font-bold">${product.price.toFixed(2)}</p>
         </div>
