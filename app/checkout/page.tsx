@@ -281,7 +281,7 @@ export default function CheckoutPage() {
                       <div>
                         <div className="flex justify-between text-base font-medium">
                           <h3>{item.name}</h3>
-                          <p className="ml-4">${item.price.toFixed(2)}</p>
+                          <p className="ml-4">{item.price.toFixed(2)} лв.</p>
                         </div>
                         <p className="mt-1 text-sm text-muted-foreground">Уникален артикул</p>
                       </div>
@@ -295,7 +295,7 @@ export default function CheckoutPage() {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Междинна сума</span>
-                  <span>${totalPrice.toFixed(2)}</span>
+                  <span>{totalPrice.toFixed(2)} лв.</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Доставка</span>
@@ -304,7 +304,7 @@ export default function CheckoutPage() {
                 <div className="border-t pt-2">
                   <div className="flex justify-between font-medium">
                     <span>Общо</span>
-                    <span>${totalPrice.toFixed(2)}</span>
+                    <span>{totalPrice.toFixed(2)} лв.</span>
                   </div>
                 </div>
               </div>

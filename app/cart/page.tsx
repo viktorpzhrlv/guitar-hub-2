@@ -66,16 +66,16 @@ export default function CartPage() {
                           <div>
                             <h3 className="text-sm font-medium">{item.name}</h3>
                             {/* Име на продукта */}
-                            <p className="mt-1 text-sm text-muted-foreground">${item.price.toFixed(2)}</p>
+                            <p className="mt-1 text-sm text-muted-foreground">{item.price.toFixed(2)} лв.</p>
                             {/* Цена на продукта */}
                           </div>
                         </div>
                       </td>
                       <td className="px-4 py-4 text-center text-sm">1</td>
                       {/* Количество на продукта */}
-                      <td className="px-4 py-4 text-right text-sm">${item.price.toFixed(2)}</td>
+                      <td className="px-4 py-4 text-right text-sm">{item.price.toFixed(2)} лв.</td>
                       {/* Цена на продукта */}
-                      <td className="px-4 py-4 text-right text-sm font-medium">${item.price.toFixed(2)}</td>
+                      <td className="px-4 py-4 text-right text-sm font-medium">{item.price.toFixed(2)} лв.</td>
                       {/* Обща цена на продукта */}
                       <td className="px-4 py-4 text-right">
                         <Button variant="ghost" size="icon" onClick={() => removeItem(item.id)}>
@@ -111,7 +111,7 @@ export default function CartPage() {
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Междинна сума</span>
                 {/* Текст за междинна сума */}
-                <span>${totalPrice.toFixed(2)}</span>
+                <span>{totalPrice.toFixed(2)} лв.</span>
                 {/* Стойност на междинната сума */}
               </div>
               <div className="flex justify-between">
@@ -130,7 +130,7 @@ export default function CartPage() {
                 <div className="flex justify-between font-medium">
                   <span>Общо</span>
                   {/* Текст за обща сума */}
-                  <span>${totalPrice.toFixed(2)}</span>
+                  <span>{totalPrice.toFixed(2)} лв.</span>
                   {/* Стойност на общата сума */}
                 </div>
               </div>

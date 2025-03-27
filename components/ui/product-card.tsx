@@ -21,7 +21,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="flex flex-1 flex-col p-4">
         <h3 className="text-sm font-medium">{product.name}</h3>
         <div className="mt-auto pt-4">
-          <p className="text-lg font-bold">${product.price.toFixed(2)}</p>
+          <p className="text-lg font-bold">{product.price.toFixed(2)} лв.</p>
         </div>
       </div>
     </Link>

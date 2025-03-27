@@ -42,7 +42,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
 
           <div className="rounded-lg border bg-card p-6">
-            <p className="text-3xl font-bold">${product.price.toFixed(2)}</p>
+            <p className="text-3xl font-bold">{product.price.toFixed(2)} лв.</p>
             <div className="mt-4">
               {product.status === "available" && <AddToCartButton product={product} />}
             </div>

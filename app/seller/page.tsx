@@ -174,7 +174,7 @@ export default function SellerDashboardPage() {
                             </div>
                           </TableCell>
                           <TableCell className="font-medium">{product.name}</TableCell>
-                          <TableCell>${product.price.toFixed(2)}</TableCell>
+                          <TableCell>{product.price.toFixed(2)} лв.</TableCell>
                           <TableCell>
                             <div className="flex items-center">
                               <span

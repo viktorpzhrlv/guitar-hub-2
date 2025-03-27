@@ -166,7 +166,7 @@ export default function OrdersPage() {
                               </p>
                             </div>
                             <div className="flex items-center gap-2">
-                              <p className="font-medium">${order.total.toFixed(2)}</p>
+                              <p className="font-medium">{order.total.toFixed(2)} лв.</p>
                               <Button
                                 variant="ghost"
                                 size="sm"
@@ -208,7 +208,7 @@ export default function OrdersPage() {
                                   </div>
                                   <div className="mt-2 flex justify-between">
                                     <span className="text-sm text-muted-foreground">Общо</span>
-                                    <span className="font-medium">${order.total.toFixed(2)}</span>
+                                    <span className="font-medium">{order.total.toFixed(2)} лв.</span>
                                   </div>
 
                                   {order.notes && (
@@ -268,10 +268,10 @@ export default function OrdersPage() {
                                                 </Link>
                                               </div>
                                             </TableCell>
-                                            <TableCell className="text-right">${item.price.toFixed(2)}</TableCell>
+                                            <TableCell className="text-right">{item.price.toFixed(2)} лв.</TableCell>
                                             <TableCell className="text-right">{item.quantity}</TableCell>
                                             <TableCell className="text-right font-medium">
-                                              ${(item.price * item.quantity).toFixed(2)}
+                                              {(item.price * item.quantity).toFixed(2)} лв.
                                             </TableCell>
                                           </TableRow>
                                         ))}
@@ -285,7 +285,7 @@ export default function OrdersPage() {
                                 <div className="w-full max-w-xs space-y-2">
                                   <div className="flex justify-between text-sm">
                                     <span className="text-muted-foreground">Междинна сума</span>
-                                    <span>${order.total.toFixed(2)}</span>
+                                    <span>{order.total.toFixed(2)} лв.</span>
                                   </div>
                                   <div className="flex justify-between text-sm">
                                     <span className="text-muted-foreground">Доставка</span>
@@ -293,7 +293,7 @@ export default function OrdersPage() {
                                   </div>
                                   <div className="flex justify-between border-t pt-2 font-medium">
                                     <span>Общо</span>
-                                    <span>${order.total.toFixed(2)}</span>
+                                    <span>{order.total.toFixed(2)} лв.</span>
                                   </div>
                                 </div>
                               </div>
