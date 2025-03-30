@@ -55,3 +55,24 @@ export interface Order {
 
 export type OrderStatus = "pending" | "processing" | "shipped" | "delivered" | "cancelled"
 
+export interface Message {
+  id: string
+  conversationId: string
+  senderId: string
+  senderName: string
+  text: string
+  read: boolean
+  timestamp: Timestamp
+}
+
+export interface Conversation {
+  id: string
+  participants: string[]
+  participantNames: Record<string, string>
+  lastMessage: string
+  lastMessageTime: Timestamp
+  createdAt: Timestamp
+  updatedAt: Timestamp
+  unreadCount: Record<string, number>
+}
+

@@ -3,12 +3,15 @@
 import type React from "react"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
-import { Package, ShoppingBag, LayoutGrid, LogOut, Menu, Users, CheckCircle } from "lucide-react"
+import { Package, ShoppingBag, LayoutGrid, LogOut, Menu, Users, CheckCircle, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { useToast } from "@/components/ui/use-toast"
 import { useAuth } from "@/lib/auth-context"
 import ProtectedRoute from "@/components/auth/protected-route"
+import { useEffect, useState } from "react"
+import { getTotalUnreadCount } from "@/lib/firebase/messages"
+import { Badge } from "@/components/ui/badge"
 
 interface AdminLayoutProps {
   children: React.ReactNode
@@ -19,6 +22,28 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const pathname = usePathname()
   const { user, signOut } = useAuth()
   const { toast } = useToast()
+  const [unreadCount, setUnreadCount] = useState(0)
+
+  // Fetch unread messages for admin
+  useEffect(() => {
+    if (user) {
+      const fetchUnreadCount = async () => {
+        try {
+          // Get unread count for the admin user
+          const count = await getTotalUnreadCount("admin")
+          setUnreadCount(count)
+        } catch (error) {
+          console.error("Error fetching admin unread count:", error)
+        }
+      }
+
+      fetchUnreadCount()
+      
+      // Poll for new messages every minute
+      const interval = setInterval(fetchUnreadCount, 60000)
+      return () => clearInterval(interval)
+    }
+  }, [user])
 
   const handleLogout = async () => {
     await signOut()
@@ -31,6 +56,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { name: "Поръчки", href: "/admin/orders", icon: ShoppingBag },
     { name: "Потребители", href: "/admin/users", icon: Users },
     { name: "Одобрения", href: "/admin/approvals", icon: CheckCircle },
+    { 
+      name: "Съобщения", 
+      href: "/admin/support/messages", 
+      icon: MessageSquare,
+      badge: unreadCount > 0 ? unreadCount : undefined
+    },
   ]
 
   return (
@@ -64,13 +95,18 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                             <Link
                               href={item.href}
                               className={`flex items-center gap-3 rounded-md px-3 py-2 ${
-                                pathname === item.href
+                                pathname === item.href || pathname?.startsWith(item.href + "/")
                                   ? "bg-muted font-medium text-foreground"
                                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
                               }`}
                             >
                               <item.icon className="h-5 w-5" />
-                              {item.name}
+                              <span className="flex-1">{item.name}</span>
+                              {item.badge && (
+                                <Badge variant="secondary" className="ml-auto">
+                                  {item.badge}
+                                </Badge>
+                              )}
                             </Link>
                           </li>
                         ))}
@@ -104,13 +140,18 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                       <Link
                         href={item.href}
                         className={`flex items-center gap-3 rounded-md px-3 py-2 ${
-                          pathname === item.href
+                          pathname === item.href || pathname?.startsWith(item.href + "/")
                             ? "bg-muted font-medium text-foreground"
                             : "text-muted-foreground hover:bg-muted hover:text-foreground"
                         }`}
                       >
                         <item.icon className="h-5 w-5" />
-                        {item.name}
+                        <span className="flex-1">{item.name}</span>
+                        {item.badge && (
+                          <Badge variant="secondary" className="ml-auto">
+                            {item.badge}
+                          </Badge>
+                        )}
                       </Link>
                     </li>
                   ))}

@@ -2,12 +2,12 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { ShoppingCart, Menu, X, Guitar, Search, User, LogOut, Settings, ShoppingBag } from "lucide-react"
+import { ShoppingCart, Menu, X, Guitar, Search, User, LogOut, Settings, ShoppingBag, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
@@ -22,14 +22,37 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useCart } from "@/lib/cart-context"
 import { useAuth } from "@/lib/auth-context"
 import { isAdmin } from "@/lib/firebase/auth"
+import { getTotalUnreadCount } from "@/lib/firebase/messages"
+import { Badge } from "@/components/ui/badge"
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  const [unreadCount, setUnreadCount] = useState(0)
   const pathname = usePathname()
   const router = useRouter()
   const { totalItems } = useCart()
   const { user, signOut } = useAuth()
+
+  // Fetch unread messages count
+  useEffect(() => {
+    if (user) {
+      const fetchUnreadCount = async () => {
+        try {
+          const count = await getTotalUnreadCount(user.uid)
+          setUnreadCount(count)
+        } catch (error) {
+          console.error("Error fetching unread count:", error)
+        }
+      }
+
+      fetchUnreadCount()
+
+      // Poll every 60 seconds
+      const interval = setInterval(fetchUnreadCount, 60000)
+      return () => clearInterval(interval)
+    }
+  }, [user])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -68,6 +91,24 @@ export default function Header() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </form>
+
+          {user && (
+            <Button
+              variant="outline"
+              size="icon"
+              className="relative"
+              asChild
+            >
+              <Link href="/messages">
+                <MessageSquare className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-white">
+                    {unreadCount}
+                  </span>
+                )}
+              </Link>
+            </Button>
+          )}
 
           <Sheet>
             <SheetTrigger asChild>
@@ -114,6 +155,16 @@ export default function Header() {
                   <Link href="/orders" className="flex items-center">
                     <ShoppingBag className="mr-2 h-4 w-4" />
                     Моите поръчки
+                  </Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem asChild>
+                  <Link href="/messages" className="flex items-center">
+                    <MessageSquare className="mr-2 h-4 w-4" />
+                    Съобщения
+                    {unreadCount > 0 && (
+                      <Badge variant="secondary" className="ml-2 px-1 py-0 h-5">{unreadCount}</Badge>
+                    )}
                   </Link>
                 </DropdownMenuItem>
 
@@ -186,6 +237,18 @@ export default function Header() {
                     <CartSheet />
                   </SheetContent>
                 </Sheet>
+
+                {user && (
+                  <Button asChild className="w-full mb-4">
+                    <Link href="/messages" onClick={() => setMobileMenuOpen(false)}>
+                      <MessageSquare className="mr-2 h-5 w-5" />
+                      Съобщения
+                      {unreadCount > 0 && (
+                        <Badge variant="secondary" className="ml-2">{unreadCount}</Badge>
+                      )}
+                    </Link>
+                  </Button>
+                )}
 
                 {user ? (
                   <div className="space-y-2">

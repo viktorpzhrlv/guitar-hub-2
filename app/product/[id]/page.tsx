@@ -4,7 +4,7 @@ import { getCategoryById } from "@/lib/firebase/categories"
 import { serializeData } from "@/lib/utils"
 import AddToCartButton from "@/components/ui/add-to-cart-button"
 import ProductGallery from "@/components/ui/product-gallery"
-
+import MessageSellerButton from "@/components/ui/message-seller-button"
 
 interface ProductPageProps {
   params: {
@@ -39,12 +39,18 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 Category: {category.name}
               </p>
             )}
+            {product.sellerName && (
+              <p className="mt-1 text-sm">
+                Seller: <span className="font-medium">{product.sellerName}</span>
+              </p>
+            )}
           </div>
 
           <div className="rounded-lg border bg-card p-6">
             <p className="text-3xl font-bold">{product.price.toFixed(2)} лв.</p>
             <div className="mt-4">
               {product.status === "available" && <AddToCartButton product={product} />}
+              {product.sellerId && <MessageSellerButton product={product} />}
             </div>
           </div>
 
