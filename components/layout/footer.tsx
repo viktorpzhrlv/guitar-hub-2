@@ -45,6 +45,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/category/musicians" className="text-sm text-muted-foreground hover:text-foreground">
+                  Музиканти
+                </Link>
+              </li>
+              <li>
                 <Link href="/category/accessories" className="text-sm text-muted-foreground hover:text-foreground">
                   Аксесоари
                 </Link>

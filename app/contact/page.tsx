@@ -1,63 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { z } from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
 
-// Zod схема за валидация на формата за контакт
-const contactFormSchema = z.object({
-  name: z.string().min(2, "Името трябва да бъде поне 2 символа"),
-  email: z.string().email("Моля, въведете валиден имейл адрес"),
-  subject: z.string().min(5, "Темата трябва да бъде поне 5 символа"),
-  message: z.string().min(10, "Съобщението трябва да бъде поне 10 символа"),
-})
-
-type ContactFormValues = z.infer<typeof contactFormSchema>
-
 export default function ContactPage() {
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
-
-  const form = useForm<ContactFormValues>({
-    resolver: zodResolver(contactFormSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    },
-  })
-
-  const onSubmit = async (data: ContactFormValues) => {
-    setIsSubmitting(true)
-
-    try {
-      // В реално приложение, ще изпратите тези данни към вашия backend
-      // За демо цели, ще симулираме успешно изпращане
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      toast({
-        title: "Съобщението е изпратено!",
-        description: "Ще се свържем с вас възможно най-скоро.",
-      })
-
-      form.reset()
-    } catch (error) {
-      toast({
-        title: "Нещо се обърка",
-        description: "Моля, опитайте отново по-късно.",
-        variant: "destructive",
-      })
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
 
   return (
     <div className="container mx-auto px-4 py-8 md:px-6 lg:px-8">
@@ -72,7 +19,7 @@ export default function ContactPage() {
         <div>
           <h2 className="text-xl font-semibold">Свържете се</h2>
           <p className="mt-2 text-muted-foreground">
-            Попълнете формата и нашият екип ще се свърже с вас възможно най-скоро.
+            Използвайте посочените по-долу контакти, за да се свържете с нашия екип.
           </p>
 
           <div className="mt-6 space-y-4">
@@ -165,70 +112,40 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <div>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Име</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Вашето име" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Имейл</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Вашият имейл адрес" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="subject"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Тема</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Относно какво е това?" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="message"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Съобщение</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Как можем да ви помогнем?" className="min-h-32" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Изпращане..." : "Изпрати съобщение"}
-              </Button>
-            </form>
-          </Form>
+        <div className="bg-muted p-6 rounded-lg">
+          <h2 className="text-xl font-semibold mb-4">Другите начини да се свържете с нас</h2>
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-medium">Следвайте ни в социалните мрежи</h3>
+              <div className="mt-2 flex space-x-4">
+                <a href="#" className="text-muted-foreground hover:text-foreground">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                  </svg>
+                </a>
+                <a href="#" className="text-muted-foreground hover:text-foreground">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                  </svg>
+                </a>
+                <a href="#" className="text-muted-foreground hover:text-foreground">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+                  </svg>
+                </a>
+              </div>
+            </div>
+            <div>
+              <h3 className="font-medium">Посетете нашия магазин</h3>
+              <p className="mt-1 text-sm text-muted-foreground">Разгледайте нашите продукти на живо и се консултирайте с нашите музикални експерти.</p>
+            </div>
+            <div>
+              <h3 className="font-medium">Абонирайте се за нашия бюлетин</h3>
+              <p className="mt-1 text-sm text-muted-foreground">Получавайте новини за нашите продукти, оферти и събития.</p>
+            </div>
+          </div>
         </div>
       </div>
 

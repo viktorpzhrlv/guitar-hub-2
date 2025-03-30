@@ -36,12 +36,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <h1 className="text-3xl font-bold">{product.name}</h1>
             {category && (
               <p className="mt-2 text-sm text-muted-foreground">
-                Category: {category.name}
+                Категория: {category.name}
               </p>
             )}
             {product.sellerName && (
               <p className="mt-1 text-sm">
-                Seller: <span className="font-medium">{product.sellerName}</span>
+                Продавач: <span className="font-medium">{product.sellerName}</span>
               </p>
             )}
           </div>
@@ -55,13 +55,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
 
           <div>
-            <h2 className="text-xl font-semibold">Description</h2>
+            <h2 className="text-xl font-semibold">Описание</h2>
             <p className="mt-2 text-muted-foreground">{product.description}</p>
           </div>
 
           {product.specifications && Object.keys(product.specifications).length > 0 && (
             <div>
-              <h2 className="text-xl font-semibold">Specifications</h2>
+              <h2 className="text-xl font-semibold">Спецификации</h2>
               <dl className="mt-4 space-y-4">
                 {Object.entries(product.specifications).map(([key, value]) => (
                   <div key={key} className="flex border-b pb-2 last:border-0">

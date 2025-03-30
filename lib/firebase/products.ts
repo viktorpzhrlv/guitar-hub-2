@@ -34,7 +34,7 @@ export async function getProducts(): Promise<Product[]> {
   })) as Product[]
 }
 
-export async function getFeaturedProducts(count = 8): Promise<Product[]> {
+export async function getFeaturedProducts(count = 4): Promise<Product[]> {
   unstable_noStore();
   const q = query(
     productsCollection,
