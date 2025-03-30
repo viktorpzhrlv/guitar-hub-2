@@ -36,10 +36,10 @@ export default function AdminMessagesPage() {
       const data = await getUserConversations("admin")
       setConversations(data)
     } catch (error) {
-      console.error("Error loading conversations:", error)
+      console.error("Грешка при зареждане на разговори:", error)
       toast({
-        title: "Error",
-        description: "Failed to load user conversations",
+        title: "Грешка",
+        description: "Неуспешно зареждане на потребителски разговори",
         variant: "destructive",
       })
     } finally {
@@ -50,21 +50,21 @@ export default function AdminMessagesPage() {
   const getUserName = (conversation: Conversation) => {
     // The admin ID is "admin", so find the other participant
     const userId = conversation.participants.find(id => id !== "admin") || ""
-    return conversation.participantNames[userId] || "Unknown User"
+    return conversation.participantNames[userId] || "Непознат потребител"
   }
 
   return (
     <AdminLayout>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">User Messages</h1>
-        <Button onClick={loadConversations}>Refresh</Button>
+        <h1 className="text-2xl font-bold">Потребителски съобщения</h1>
+        <Button onClick={loadConversations}>Обнови</Button>
       </div>
 
       <div className="mt-6">
         <Card>
           <CardHeader>
-            <CardTitle>User Support Conversations</CardTitle>
-            <CardDescription>View and respond to user inquiries</CardDescription>
+            <CardTitle>Разговори с потребители</CardTitle>
+            <CardDescription>Преглед и отговор на запитвания от потребители</CardDescription>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -84,9 +84,9 @@ export default function AdminMessagesPage() {
                 <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
                   <MessageCircle className="h-6 w-6 text-muted-foreground" />
                 </div>
-                <h3 className="mb-1 text-lg font-medium">No Messages</h3>
+                <h3 className="mb-1 text-lg font-medium">Няма съобщения</h3>
                 <p className="text-muted-foreground">
-                  No users have sent messages to admin support yet.
+                  Все още няма потребители, изпратили съобщения до администраторската поддръжка.
                 </p>
               </div>
             ) : (
@@ -110,12 +110,12 @@ export default function AdminMessagesPage() {
                           <span className="text-xs text-muted-foreground">
                             {conversation.lastMessageTime?.toDate
                               ? format(new Date(conversation.lastMessageTime.toDate()), "PPp")
-                              : "N/A"}
+                              : "Не е налично"}
                           </span>
                         </div>
                         <div className="flex items-center justify-between mt-1">
                           <p className="text-sm text-muted-foreground line-clamp-1">
-                            {conversation.lastMessage || "No messages yet"}
+                            {conversation.lastMessage || "Все още няма съобщения"}
                           </p>
                           {unreadCount > 0 && (
                             <Badge className="ml-2">{unreadCount}</Badge>

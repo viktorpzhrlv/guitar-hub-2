@@ -36,10 +36,10 @@ export default function MessagesPage() {
       const data = await getUserConversations(user.uid)
       setConversations(data)
     } catch (error) {
-      console.error("Error loading conversations:", error)
+      console.error("Грешка при зареждане на разговори:", error)
       toast({
-        title: "Error",
-        description: "Failed to load your conversations",
+        title: "Грешка",
+        description: "Неуспешно зареждане на вашите разговори",
         variant: "destructive",
       })
     } finally {
@@ -51,13 +51,13 @@ export default function MessagesPage() {
     if (!user) return
 
     try {
-      const adminConversation = await getOrCreateAdminConversation(user.uid, user.displayName || "User")
+      const adminConversation = await getOrCreateAdminConversation(user.uid, user.displayName || "Потребител")
       router.push(`/messages/${adminConversation.id}`)
     } catch (error) {
-      console.error("Error creating admin conversation:", error)
+      console.error("Грешка при създаване на разговор с администратор:", error)
       toast({
-        title: "Error",
-        description: "Failed to start conversation with admin",
+        title: "Грешка",
+        description: "Неуспешно започване на разговор с администратор",
         variant: "destructive",
       })
     }
@@ -66,7 +66,7 @@ export default function MessagesPage() {
   const getOtherParticipantName = (conversation: Conversation) => {
     if (!user) return ""
     const otherParticipantId = conversation.participants.find(id => id !== user.uid) || ""
-    return conversation.participantNames[otherParticipantId] || "Unknown User"
+    return conversation.participantNames[otherParticipantId] || "Непознат потребител"
   }
 
   return (
@@ -74,20 +74,20 @@ export default function MessagesPage() {
       <div className="container py-10">
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Messages</h1>
-            <p className="mt-1 text-muted-foreground">Manage your conversations with sellers and buyers</p>
+            <h1 className="text-3xl font-bold">Съобщения</h1>
+            <p className="mt-1 text-muted-foreground">Управлявайте вашите разговори с продавачи и купувачи</p>
           </div>
           <Button onClick={handleMessageAdmin}>
             <UserCog className="mr-2 h-4 w-4" />
-            Message Admin
+            Съобщение до администратор
           </Button>
         </div>
 
         <div className="grid gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>Your Conversations</CardTitle>
-              <CardDescription>View and manage your conversations</CardDescription>
+              <CardTitle>Вашите разговори</CardTitle>
+              <CardDescription>Преглеждайте и управлявайте вашите разговори</CardDescription>
             </CardHeader>
             <CardContent>
               {isLoading ? (
@@ -107,9 +107,9 @@ export default function MessagesPage() {
                   <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
                     <MessageCircle className="h-6 w-6 text-muted-foreground" />
                   </div>
-                  <h3 className="mb-1 text-lg font-medium">No Conversations Found</h3>
+                  <h3 className="mb-1 text-lg font-medium">Не са намерени разговори</h3>
                   <p className="text-muted-foreground">
-                    You don't have any conversations yet. Visit a product page to message a seller.
+                    Все още нямате разговори. Посетете страницата на продукт, за да изпратите съобщение на продавач.
                   </p>
                 </div>
               ) : (
@@ -133,12 +133,12 @@ export default function MessagesPage() {
                             <span className="text-xs text-muted-foreground">
                               {conversation.lastMessageTime?.toDate
                                 ? format(new Date(conversation.lastMessageTime.toDate()), "PPp")
-                                : "N/A"}
+                                : "Не е налично"}
                             </span>
                           </div>
                           <div className="flex items-center justify-between mt-1">
                             <p className="text-sm text-muted-foreground line-clamp-1">
-                              {conversation.lastMessage || "No messages yet"}
+                              {conversation.lastMessage || "Все още няма съобщения"}
                             </p>
                             {unreadCount > 0 && (
                               <Badge className="ml-2">{unreadCount}</Badge>

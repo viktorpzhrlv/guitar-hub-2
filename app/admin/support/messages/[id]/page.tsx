@@ -67,8 +67,8 @@ export default function AdminConversationPage({ params }: AdminConversationPageP
       const conversationData = await getConversationById(conversationId)
       if (!conversationData) {
         toast({
-          title: "Error",
-          description: "Conversation not found",
+          title: "Грешка",
+          description: "Разговорът не е намерен",
           variant: "destructive",
         })
         router.push("/admin/support/messages")
@@ -78,8 +78,8 @@ export default function AdminConversationPage({ params }: AdminConversationPageP
       // Verify this is an admin conversation
       if (!conversationData.participants.includes("admin")) {
         toast({
-          title: "Error",
-          description: "This is not an admin support conversation",
+          title: "Грешка",
+          description: "Това не е разговор с администраторска поддръжка",
           variant: "destructive",
         })
         router.push("/admin/support/messages")
@@ -92,10 +92,10 @@ export default function AdminConversationPage({ params }: AdminConversationPageP
       // Mark messages as read when entering the conversation
       await markMessagesAsRead(conversationId, "admin")
     } catch (error) {
-      console.error("Error loading conversation:", error)
+      console.error("Грешка при зареждане на разговор:", error)
       toast({
-        title: "Error",
-        description: "Failed to load conversation",
+        title: "Грешка",
+        description: "Неуспешно зареждане на разговор",
         variant: "destructive",
       })
     } finally {
@@ -112,7 +112,7 @@ export default function AdminConversationPage({ params }: AdminConversationPageP
       // Mark messages as read when loading messages
       await markMessagesAsRead(conversationId, "admin")
     } catch (error) {
-      console.error("Error loading messages:", error)
+      console.error("Грешка при зареждане на съобщения:", error)
     }
   }
   
@@ -125,8 +125,8 @@ export default function AdminConversationPage({ params }: AdminConversationPageP
       
       if (!userId) {
         toast({
-          title: "Error",
-          description: "Cannot determine recipient",
+          title: "Грешка",
+          description: "Не може да се определи получателя",
           variant: "destructive",
         })
         return
@@ -135,7 +135,7 @@ export default function AdminConversationPage({ params }: AdminConversationPageP
       await sendMessage(
         conversationId,
         "admin",
-        "Admin Support",
+        "Администраторска поддръжка",
         userId,
         newMessage.trim()
       )
@@ -143,10 +143,10 @@ export default function AdminConversationPage({ params }: AdminConversationPageP
       setNewMessage("")
       await loadMessages()
     } catch (error) {
-      console.error("Error sending message:", error)
+      console.error("Грешка при изпращане на съобщение:", error)
       toast({
-        title: "Error",
-        description: "Failed to send message",
+        title: "Грешка",
+        description: "Неуспешно изпращане на съобщение",
         variant: "destructive",
       })
     } finally {
@@ -161,7 +161,7 @@ export default function AdminConversationPage({ params }: AdminConversationPageP
   const getUserName = () => {
     if (!conversation) return ""
     const userId = conversation.participants.find(id => id !== "admin") || ""
-    return conversation.participantNames[userId] || "Unknown User"
+    return conversation.participantNames[userId] || "Непознат потребител"
   }
   
   return (
@@ -169,10 +169,10 @@ export default function AdminConversationPage({ params }: AdminConversationPageP
       <div className="flex items-center">
         <Button variant="ghost" onClick={() => router.push("/admin/support/messages")} className="mr-4">
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to All Messages
+          Обратно към всички съобщения
         </Button>
         <h1 className="text-2xl font-bold">
-          {isLoading ? <Skeleton className="h-8 w-40" /> : `Conversation with ${getUserName()}`}
+          {isLoading ? <Skeleton className="h-8 w-40" /> : `Разговор с ${getUserName()}`}
         </h1>
       </div>
       
@@ -194,7 +194,7 @@ export default function AdminConversationPage({ params }: AdminConversationPageP
                 </div>
               ) : messages.length === 0 ? (
                 <div className="flex h-full items-center justify-center text-muted-foreground">
-                  No messages yet in this conversation.
+                  Все още няма съобщения в този разговор.
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -240,13 +240,13 @@ export default function AdminConversationPage({ params }: AdminConversationPageP
                 <Input
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
-                  placeholder="Type your response..."
+                  placeholder="Напишете вашия отговор..."
                   disabled={isLoading || isSending}
                   className="flex-1"
                 />
                 <Button type="submit" disabled={isLoading || isSending || !newMessage.trim()}>
                   <Send className="h-4 w-4 mr-2" />
-                  Send
+                  Изпрати
                 </Button>
               </form>
             </div>

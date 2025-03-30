@@ -67,8 +67,8 @@ export default function ConversationPage({ params }: ConversationPageProps) {
       const conversationData = await getConversationById(conversationId)
       if (!conversationData) {
         toast({
-          title: "Error",
-          description: "Conversation not found",
+          title: "Грешка",
+          description: "Разговорът не е намерен",
           variant: "destructive",
         })
         router.push("/messages")
@@ -78,8 +78,8 @@ export default function ConversationPage({ params }: ConversationPageProps) {
       // Verify user is a participant
       if (!conversationData.participants.includes(user.uid)) {
         toast({
-          title: "Unauthorized",
-          description: "You don't have permission to view this conversation",
+          title: "Неоторизиран",
+          description: "Нямате разрешение да преглеждате този разговор",
           variant: "destructive",
         })
         router.push("/messages")
@@ -92,10 +92,10 @@ export default function ConversationPage({ params }: ConversationPageProps) {
       // Mark messages as read when entering the conversation
       await markMessagesAsRead(conversationId, user.uid)
     } catch (error) {
-      console.error("Error loading conversation:", error)
+      console.error("Грешка при зареждане на разговор:", error)
       toast({
-        title: "Error",
-        description: "Failed to load conversation",
+        title: "Грешка",
+        description: "Неуспешно зареждане на разговор",
         variant: "destructive",
       })
     } finally {
@@ -112,7 +112,7 @@ export default function ConversationPage({ params }: ConversationPageProps) {
       // Mark messages as read when loading messages
       await markMessagesAsRead(conversationId, user.uid)
     } catch (error) {
-      console.error("Error loading messages:", error)
+      console.error("Грешка при зареждане на съобщения:", error)
     }
   }
   
@@ -125,8 +125,8 @@ export default function ConversationPage({ params }: ConversationPageProps) {
       
       if (!otherParticipantId) {
         toast({
-          title: "Error",
-          description: "Cannot determine recipient",
+          title: "Грешка",
+          description: "Не може да се определи получателя",
           variant: "destructive",
         })
         return
@@ -135,7 +135,7 @@ export default function ConversationPage({ params }: ConversationPageProps) {
       await sendMessage(
         conversationId,
         user.uid,
-        user.displayName || "You",
+        user.displayName || "Вие",
         otherParticipantId,
         newMessage.trim()
       )
@@ -143,10 +143,10 @@ export default function ConversationPage({ params }: ConversationPageProps) {
       setNewMessage("")
       await loadMessages()
     } catch (error) {
-      console.error("Error sending message:", error)
+      console.error("Грешка при изпращане на съобщение:", error)
       toast({
-        title: "Error",
-        description: "Failed to send message",
+        title: "Грешка",
+        description: "Неуспешно изпращане на съобщение",
         variant: "destructive",
       })
     } finally {
@@ -161,7 +161,7 @@ export default function ConversationPage({ params }: ConversationPageProps) {
   const getOtherParticipantName = () => {
     if (!user || !conversation) return ""
     const otherParticipantId = conversation.participants.find(id => id !== user.uid) || ""
-    return conversation.participantNames[otherParticipantId] || "Unknown User"
+    return conversation.participantNames[otherParticipantId] || "Непознат потребител"
   }
   
   return (
@@ -170,7 +170,7 @@ export default function ConversationPage({ params }: ConversationPageProps) {
         <div className="mb-6 flex items-center">
           <Button variant="ghost" onClick={() => router.push("/messages")} className="mr-4">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
+            Назад
           </Button>
           <h1 className="text-2xl font-bold">
             {isLoading ? <Skeleton className="h-8 w-40" /> : getOtherParticipantName()}
@@ -195,7 +195,7 @@ export default function ConversationPage({ params }: ConversationPageProps) {
                   </div>
                 ) : messages.length === 0 ? (
                   <div className="flex h-full items-center justify-center text-muted-foreground">
-                    No messages yet. Start the conversation!
+                    Все още няма съобщения. Започнете разговор!
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -238,13 +238,13 @@ export default function ConversationPage({ params }: ConversationPageProps) {
                   <Input
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
-                    placeholder="Type your message..."
+                    placeholder="Напишете вашето съобщение..."
                     disabled={isLoading || isSending}
                     className="flex-1"
                   />
                   <Button type="submit" disabled={isLoading || isSending || !newMessage.trim()}>
                     <Send className="h-4 w-4 mr-2" />
-                    Send
+                    Изпрати
                   </Button>
                 </form>
               </div>
