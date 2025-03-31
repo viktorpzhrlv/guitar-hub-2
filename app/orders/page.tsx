@@ -113,7 +113,7 @@ export default function OrdersPage() {
   return (
     <ProtectedRoute>
       <div className="container py-10">
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold">Моите поръчки</h1>
             <p className="mt-1 text-muted-foreground">Преглед и проследяване на вашите поръчки</p>
@@ -232,7 +232,8 @@ export default function OrdersPage() {
                                     </p>
                                   </div>
 
-                                  <div className="rounded-md border">
+                                  {/* Desktop view - table */}
+                                  <div className="hidden md:block rounded-md border">
                                     <Table>
                                       <TableHeader>
                                         <TableRow>
@@ -249,7 +250,7 @@ export default function OrdersPage() {
                                             <TableCell>
                                               <div className="h-12 w-12 overflow-hidden rounded-md border">
                                                 <Image
-                                                  src={item.image || "/images/product-placeholder.jpg"}
+                                                  src={item.image || "/placeholder.svg"}
                                                   alt={item.name}
                                                   width={48}
                                                   height={48}
@@ -277,6 +278,50 @@ export default function OrdersPage() {
                                         ))}
                                       </TableBody>
                                     </Table>
+                                  </div>
+
+                                  {/* Mobile view - cards */}
+                                  <div className="md:hidden space-y-3">
+                                    {items.map((item) => (
+                                      <div key={item.id} className="rounded-md border p-3">
+                                        <div className="flex gap-3">
+                                          <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border">
+                                            <Image
+                                              src={item.image || "/placeholder.svg"}
+                                              alt={item.name}
+                                              width={64}
+                                              height={64}
+                                              className="h-full w-full object-cover"
+                                            />
+                                          </div>
+                                          <div className="flex-1">
+                                            <p className="font-medium">{item.name}</p>
+                                            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                                              <div>
+                                                <span className="text-muted-foreground">Цена: </span>
+                                                <span>{item.price.toFixed(2)} лв.</span>
+                                              </div>
+                                              <div>
+                                                <span className="text-muted-foreground">Количество: </span>
+                                                <span>{item.quantity}</span>
+                                              </div>
+                                              <div>
+                                                <span className="text-muted-foreground">Общо: </span>
+                                                <span className="font-medium">
+                                                  {(item.price * item.quantity).toFixed(2)} лв.
+                                                </span>
+                                              </div>
+                                            </div>
+                                            <Link
+                                              href={`/product/${item.productId}`}
+                                              className="text-xs text-primary flex items-center mt-2"
+                                            >
+                                              Виж продукта <ExternalLink className="ml-1 h-3 w-3" />
+                                            </Link>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ))}
                                   </div>
                                 </div>
                               ))}
