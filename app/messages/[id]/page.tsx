@@ -166,53 +166,53 @@ export default function ConversationPage({ params }: ConversationPageProps) {
   
   return (
     <ProtectedRoute>
-      <div className="container py-10">
-        <div className="mb-6 flex items-center">
-          <Button variant="ghost" onClick={() => router.push("/messages")} className="mr-4">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Назад
+      <div className="container py-4 sm:py-10">
+        <div className="mb-4 sm:mb-6 flex items-center">
+          <Button variant="ghost" onClick={() => router.push("/messages")} className="mr-2 sm:mr-4 p-2 sm:p-3">
+            <ArrowLeft className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Назад</span>
           </Button>
-          <h1 className="text-2xl font-bold">
-            {isLoading ? <Skeleton className="h-8 w-40" /> : getOtherParticipantName()}
+          <h1 className="text-xl sm:text-2xl font-bold truncate">
+            {isLoading ? <Skeleton className="h-6 sm:h-8 w-32 sm:w-40" /> : getOtherParticipantName()}
           </h1>
         </div>
         
-        <Card>
+        <Card className="border sm:border">
           <CardContent className="p-0">
-            <div className="h-[60vh] flex flex-col">
+            <div className="h-[70vh] sm:h-[60vh] flex flex-col">
               {/* Messages Area */}
-              <div className="flex-1 overflow-y-auto p-4">
+              <div className="flex-1 overflow-y-auto p-3 sm:p-4">
                 {isLoading ? (
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {Array.from({ length: 5 }).map((_, index) => (
                       <div key={index} className={`flex ${index % 2 === 0 ? "justify-start" : "justify-end"}`}>
-                        <div className={`max-w-[70%] p-3 rounded-lg ${index % 2 === 0 ? "bg-muted" : "bg-primary text-primary-foreground"}`}>
-                          <Skeleton className="h-4 w-[200px]" />
-                          <Skeleton className="h-3 w-[100px] mt-2" />
+                        <div className={`max-w-[85%] sm:max-w-[70%] p-2 sm:p-3 rounded-lg ${index % 2 === 0 ? "bg-muted" : "bg-primary text-primary-foreground"}`}>
+                          <Skeleton className="h-3 sm:h-4 w-[120px] sm:w-[200px]" />
+                          <Skeleton className="h-2 sm:h-3 w-[80px] sm:w-[100px] mt-2" />
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : messages.length === 0 ? (
-                  <div className="flex h-full items-center justify-center text-muted-foreground">
+                  <div className="flex h-full items-center justify-center text-muted-foreground text-sm sm:text-base px-4 text-center">
                     Все още няма съобщения. Започнете разговор!
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {messages.map((message) => {
                       const isOwnMessage = user?.uid === message.senderId
                       
                       return (
                         <div key={message.id} className={`flex ${isOwnMessage ? "justify-end" : "justify-start"}`}>
                           <div 
-                            className={`max-w-[70%] p-3 rounded-lg ${
+                            className={`max-w-[85%] sm:max-w-[70%] p-2.5 sm:p-3 rounded-lg ${
                               isOwnMessage 
                                 ? "bg-primary text-primary-foreground" 
                                 : "bg-muted"
                             }`}
                           >
-                            <p>{message.text}</p>
-                            <p className={`text-xs mt-1 ${isOwnMessage ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
+                            <p className="text-sm sm:text-base break-words">{message.text}</p>
+                            <p className={`text-[10px] sm:text-xs mt-1 ${isOwnMessage ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
                               {message.timestamp?.toDate 
                                 ? format(new Date(message.timestamp.toDate()), "p") 
                                 : ""}
@@ -227,7 +227,7 @@ export default function ConversationPage({ params }: ConversationPageProps) {
               </div>
               
               {/* Message Input */}
-              <div className="border-t p-4">
+              <div className="border-t p-2 sm:p-4">
                 <form 
                   onSubmit={(e) => {
                     e.preventDefault()
@@ -240,11 +240,16 @@ export default function ConversationPage({ params }: ConversationPageProps) {
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Напишете вашето съобщение..."
                     disabled={isLoading || isSending}
-                    className="flex-1"
+                    className="flex-1 text-sm sm:text-base h-9 sm:h-10"
                   />
-                  <Button type="submit" disabled={isLoading || isSending || !newMessage.trim()}>
-                    <Send className="h-4 w-4 mr-2" />
-                    Изпрати
+                  <Button 
+                    type="submit" 
+                    disabled={isLoading || isSending || !newMessage.trim()}
+                    size="sm"
+                    className="sm:size-default h-9 sm:h-10"
+                  >
+                    <Send className="h-4 w-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Изпрати</span>
                   </Button>
                 </form>
               </div>
