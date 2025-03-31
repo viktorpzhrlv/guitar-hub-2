@@ -33,7 +33,7 @@ type CheckoutFormValues = z.infer<typeof checkoutSchema>
 export default function CheckoutPage() {
   const router = useRouter()
   const { items, totalPrice, clearCart } = useCart()
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -56,7 +56,17 @@ export default function CheckoutPage() {
     if (items.length === 0) {
       router.push("/cart")
     }
-  }, [items.length, router])
+    
+    // Redirect to login if user is not authenticated
+    if (!user && !loading) {
+      router.push("/auth/login?redirect=" + encodeURIComponent("/checkout"))
+      toast({
+        title: "Вход необходим",
+        description: "Трябва да влезете в профила си, за да завършите поръчката",
+        variant: "destructive",
+      })
+    }
+  }, [items.length, router, user, loading, toast])
 
   // Check if user is trying to buy their own item
   useEffect(() => {
